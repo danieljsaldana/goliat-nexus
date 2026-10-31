@@ -22,7 +22,7 @@ CI usa runners hospedados por GitHub y `contents: read`. El checkout no conserva
 
 Solo CodeQL escribe resultados de seguridad. Solo el job que crea el borrador tiene `contents: write`. Pages limita `pages: write` e `id-token: write` al job de publicación. No se usa `pull_request_target`, sesiones Azure, SPN, PAT ni secretos cloud en CI.
 
-El repositorio principal protege `main` mediante PR, `CI passed`, los tres análisis CodeQL, la revisión de dependencias y conversaciones resueltas. Las ejecuciones externas requieren aprobación del mantenedor. Consulta [Cómo contribuir](../CONTRIBUTING.es.md). En un fork, el propietario debe configurar estos ajustes: los YAML no los aplican automáticamente. Configura también los entornos `release` y `github-pages` según tu equipo y selecciona GitHub Actions en Settings → Pages.
+El repositorio principal protege `main` mediante PR, `CI passed`, los tres análisis CodeQL, la revisión de dependencias y conversaciones resueltas. Las ejecuciones externas requieren aprobación del mantenedor. Consulta [Cómo contribuir](https://github.com/danieljsaldana/goliat-nexus/blob/main/CONTRIBUTING.es.md). En un fork, el propietario debe configurar estos ajustes: los YAML no los aplican automáticamente. Configura también los entornos `release` y `github-pages` según tu equipo y selecciona GitHub Actions en Settings → Pages.
 
 ## Frontera de publicación
 
