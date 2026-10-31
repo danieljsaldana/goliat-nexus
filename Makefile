@@ -17,6 +17,7 @@ tfvars:
 test:
 	python3 -m unittest discover -s tests -v
 	node --test tests/application.test.mjs tests/portal-api.test.mjs apps/api/tests/*.test.mjs
+	npm --prefix apps/portal test
 
 images-check:
 	sh scripts/check_images.sh

@@ -1,4 +1,6 @@
 import copy
+import base64
+import hashlib
 import json
 import tempfile
 import unittest
@@ -31,6 +33,16 @@ class PublicEntryTests(unittest.TestCase):
         self.assertIn("'sha256-",cfg['globalHeaders']['Content-Security-Policy'])
         self.assertNotIn("script-src 'self' 'unsafe-inline'",cfg['globalHeaders']['Content-Security-Policy'])
         self.assertEqual(cfg['routes'][0]['route'],'/dev/tenant/config.json')
+
+    def test_csp_hashes_html_tag_variants_and_ignores_comments_and_external_scripts(self):
+        script='console.log("á &amp; < >");\n'
+        expected="'sha256-"+base64.b64encode(hashlib.sha256(script.encode()).digest()).decode()+"'"
+        for html in (f'<SCRIPT>{script}</SCRIPT>',f'<script data-label=">">{script}</script \t>',f'<ScRiPt>{script}</sCrIpT\n>'):
+            with self.subTest(html=html),tempfile.TemporaryDirectory() as folder:
+                Path(folder,'index.html').write_text(html+'<!-- <script>commented()</script> --><script SRC="/app.js">externalFallback()</script>',encoding='utf-8')
+                policy=swa_configuration('8.8.8.8',folder,'/dev/tenant')['globalHeaders']['Content-Security-Policy']
+                self.assertIn(expected,policy)
+                self.assertEqual(policy.count("'sha256-"),1)
 
     def plan(self):
         gateway={'sku':[{'name':'WAF_v2'}],'backend_http_settings':[{'protocol':'Https','port':443,'certificate_chain_validation_enabled':True,'sni_validation_enabled':True}], 'ssl_certificate':[{'key_vault_secret_id':'https://vault.vault.azure.net/secrets/tls','data':None}]}

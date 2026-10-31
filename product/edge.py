@@ -7,9 +7,33 @@ import ssl
 import tempfile
 import time
 import uuid
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.request import urlopen
 from .config import ConfigError, ROOT
+
+
+class _InlineScriptHashes(HTMLParser):
+    """Hash inline script text without treating HTML as a regular expression."""
+    def __init__(self):
+        super().__init__(convert_charrefs=False)
+        self.hashes = set()
+        self.script = None
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "script":
+            self.script = None if any(name == "src" for name, _ in attrs) else []
+
+    def handle_data(self, data):
+        if self.script is not None:
+            self.script.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "script":
+            if self.script:
+                text = "".join(self.script)
+                self.hashes.add("'sha256-" + base64.b64encode(hashlib.sha256(text.encode()).digest()).decode() + "'")
+            self.script = None
 
 
 def swa_configuration(public_ip, directory, prefix, forwarded_hosts=()):
@@ -19,9 +43,10 @@ def swa_configuration(public_ip, directory, prefix, forwarded_hosts=()):
         raise ConfigError("El origen SWA requiere la IPv4 del WAF.")
     hashes = set()
     for path in Path(directory).rglob("*.html"):
-        for script in re.findall(r"<script\b[^>]*>(.*?)</script>", path.read_text(), re.S | re.I):
-            if script.strip():
-                hashes.add("'sha256-" + base64.b64encode(hashlib.sha256(script.encode()).digest()).decode() + "'")
+        parser = _InlineScriptHashes()
+        parser.feed(path.read_text(encoding="utf-8"))
+        parser.close()
+        hashes.update(parser.hashes)
     policy = "default-src 'self'; script-src 'self' " + " ".join(sorted(hashes)) + "; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://login.microsoftonline.com https://*.msauth.net https://*.msftauth.net; frame-src 'self' https://login.microsoftonline.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
     config = {"networking": {"allowedIpRanges": [str(ip)+"/32"]}, "globalHeaders": {
         "Content-Security-Policy": policy, "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "Permissions-Policy": "camera=(), microphone=(), geolocation=()", "Strict-Transport-Security": "max-age=31536000"},

@@ -108,6 +108,7 @@ jobs:
       - run: npm --prefix apps/functions ci --ignore-scripts
       - run: node --test tests/application.test.mjs tests/portal-api.test.mjs apps/api/tests/*.test.mjs
       - run: npm --prefix apps/portal ci --ignore-scripts
+      - run: npm --prefix apps/portal test
       - run: npm --prefix apps/portal run build
   dependencies:
     name: Dependency audit (${{ matrix.package }})
