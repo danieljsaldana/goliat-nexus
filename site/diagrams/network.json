@@ -1,0 +1,927 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Red y seguridad · Entrada, salida y acceso privado",
+    "subtitle": "Plan IP de referencia. Entrada web/API por WAF; acceso privado y salidas autorizadas por Firewall. PaaS fuera de VNets; sus Private Endpoints están dentro.",
+    "locale": "es",
+    "quality_profile": "standard",
+    "animation": "none",
+    "output": "network.html"
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "Usuarios en Internet",
+      "sublabel": "Navegador · HTTPS · Sesión Entra",
+      "tag": "Las aplicaciones se consumen por el WAF",
+      "pos": [
+        720,
+        60
+      ],
+      "size": [
+        260,
+        100
+      ]
+    },
+    {
+      "id": "entra",
+      "type": "security",
+      "label": "Microsoft Entra ID",
+      "sublabel": "PKCE · Tenant, audiencia, scope y rol",
+      "tag": "Identidad por entorno · MFA corporativa",
+      "pos": [
+        1120,
+        60
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "external-services",
+      "type": "external",
+      "label": "GitHub y servicios externos",
+      "sublabel": "GitHub · Paquetes · Azure APIs · ACME",
+      "tag": "Allowlist de salida según origen",
+      "pos": [
+        280,
+        60
+      ],
+      "size": [
+        260,
+        100
+      ]
+    },
+    {
+      "id": "dev-webs",
+      "type": "frontend",
+      "label": "2 Static Web Apps · DEV",
+      "sublabel": "tenant + admin · Standard · West Europe",
+      "tag": "Origen público restringido a la IP del WAF",
+      "pos": [
+        80,
+        270
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-webs",
+      "type": "frontend",
+      "label": "2 Static Web Apps · PROD",
+      "sublabel": "tenant + admin · Standard · West Europe",
+      "tag": "Origen público restringido a la IP del WAF",
+      "pos": [
+        1400,
+        270
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "waf",
+      "type": "security",
+      "label": "Application Gateway WAF_v2",
+      "sublabel": "IP pública · HTTPS 443 · OWASP Prevention",
+      "tag": "Subred dedicada · Sin UDR 0/0 al Firewall",
+      "pos": [
+        720,
+        270
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "firewall",
+      "type": "security",
+      "label": "Azure Firewall Standard",
+      "sublabel": "DNS proxy · SNAT · Reglas por origen/destino",
+      "tag": "IP pública de salida · No publica las APIs",
+      "pos": [
+        720,
+        500
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "github-agent",
+      "type": "backend",
+      "label": "VM privada GitHub · opcional",
+      "sublabel": "NIC + SSD + identidad de sistema",
+      "tag": "HTTPS saliente · Sin IP pública ni roles Azure",
+      "pos": [
+        560,
+        730
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "certificates",
+      "type": "backend",
+      "label": "ACA privado · Certificados",
+      "sublabel": "Emisión y renovación ACME · Identidad propia",
+      "tag": "Clave en AKV · Lease Blob independiente",
+      "pos": [
+        900,
+        730
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "shared-pe",
+      "type": "cloud",
+      "label": "3 Private Endpoints comunes",
+      "sublabel": "ACR · Blob del estado · Vault TLS",
+      "tag": "IPs privadas en la subred endpoints",
+      "pos": [
+        720,
+        960
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "dev-apps",
+      "type": "backend",
+      "label": "ACA interno · DEV",
+      "sublabel": "Nginx + platform + tenant + activities",
+      "tag": "Nginx solo desde WAF; APIs solo en ACA",
+      "pos": [
+        80,
+        500
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "dev-functions",
+      "type": "backend",
+      "label": "Integración Functions · DEV",
+      "sublabel": "Salida VNet de su Function App Flex",
+      "tag": "Trigger de cola + timer · Sin API de negocio",
+      "pos": [
+        80,
+        730
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "dev-data",
+      "type": "cloud",
+      "label": "Private Endpoints · DEV",
+      "sublabel": "8 base + 1 si se activa Event Grid",
+      "tag": "Vaults · Storage · Cosmos · Function",
+      "pos": [
+        80,
+        960
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "dev-paas",
+      "type": "cloud",
+      "label": "Servicios PaaS · DEV",
+      "sublabel": "Cosmos · 2 Storage · 2 vaults · Function",
+      "tag": "Acceso público deshabilitado · Event Grid opcional",
+      "pos": [
+        80,
+        1320
+      ],
+      "size": [
+        260,
+        110
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-apps",
+      "type": "backend",
+      "label": "ACA interno · PROD",
+      "sublabel": "Nginx + platform + tenant + activities",
+      "tag": "Nginx solo desde WAF; APIs solo en ACA",
+      "pos": [
+        1400,
+        500
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-functions",
+      "type": "backend",
+      "label": "Integración Functions · PROD",
+      "sublabel": "Salida VNet de su Function App Flex",
+      "tag": "Trigger de cola + timer · Sin API de negocio",
+      "pos": [
+        1400,
+        730
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-data",
+      "type": "cloud",
+      "label": "Private Endpoints · PROD",
+      "sublabel": "8 base + 1 si se activa Event Grid",
+      "tag": "Vaults · Storage · Cosmos · Function",
+      "pos": [
+        1400,
+        960
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-paas",
+      "type": "cloud",
+      "label": "Servicios PaaS · PROD",
+      "sublabel": "Cosmos · 2 Storage · 2 vaults · Function",
+      "tag": "Acceso público deshabilitado · Event Grid opcional",
+      "pos": [
+        1400,
+        1320
+      ],
+      "size": [
+        260,
+        110
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "shared-paas",
+      "type": "cloud",
+      "label": "Servicios PaaS compartidos",
+      "sublabel": "ACR Premium · Estado Blob · Key Vault TLS",
+      "tag": "Estado privado · Vault TLS con AzureServices",
+      "pos": [
+        720,
+        1320
+      ],
+      "size": [
+        260,
+        110
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "private-dns",
+      "type": "cloud",
+      "label": "Zonas privadas y enlaces VNet",
+      "sublabel": "Resolución por DNS proxy del Firewall",
+      "tag": "11 zonas · Hub y spokes · No es una VM DNS",
+      "pos": [
+        720,
+        1550
+      ],
+      "size": [
+        260,
+        100
+      ],
+      "brand": "microsoft-azure"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Apps 10.10.0.0/23",
+      "wraps": [
+        "dev-apps"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Functions 10.10.3.0/27",
+      "wraps": [
+        "dev-functions"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Endpoints 10.10.2.0/27",
+      "wraps": [
+        "dev-data"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Spoke DEV · 10.10.0.0/16",
+      "wraps": [
+        "dev-apps",
+        "dev-functions",
+        "dev-data"
+      ],
+      "pad": 70
+    },
+    {
+      "kind": "region",
+      "label": "Apps 10.20.0.0/23",
+      "wraps": [
+        "prod-apps"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Functions 10.20.3.0/27",
+      "wraps": [
+        "prod-functions"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Endpoints 10.20.2.0/27",
+      "wraps": [
+        "prod-data"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Spoke PROD · 10.20.0.0/16",
+      "wraps": [
+        "prod-apps",
+        "prod-functions",
+        "prod-data"
+      ],
+      "pad": 70
+    },
+    {
+      "kind": "region",
+      "label": "Gateway 10.0.4.0/24",
+      "wraps": [
+        "waf"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "AzureFirewallSubnet 10.0.0.0/26",
+      "wraps": [
+        "firewall"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Management 10.0.1.0/24",
+      "wraps": [
+        "github-agent"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Edge apps 10.0.8.0/23",
+      "wraps": [
+        "certificates"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "Endpoints 10.0.2.0/27",
+      "wraps": [
+        "shared-pe"
+      ],
+      "pad": 28
+    },
+    {
+      "kind": "region",
+      "label": "HUB compartido · 10.0.0.0/16",
+      "wraps": [
+        "waf",
+        "firewall",
+        "github-agent",
+        "certificates",
+        "shared-pe"
+      ],
+      "pad": 70
+    }
+  ],
+  "connections": [
+    {
+      "id": "user-waf",
+      "from": "users",
+      "to": "waf",
+      "label": "HTTPS 443",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        850,
+        215
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "user-entra",
+      "from": "users",
+      "to": "entra",
+      "label": "Inicio de sesión",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        1050,
+        110
+      ],
+      "variant": "security"
+    },
+    {
+      "id": "waf-dev-web",
+      "from": "waf",
+      "to": "dev-webs",
+      "label": "HTTPS · IP del WAF",
+      "fromSide": "left",
+      "toSide": "right",
+      "labelAt": [
+        520,
+        315
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "waf-prod-web",
+      "from": "waf",
+      "to": "prod-webs",
+      "label": "HTTPS · IP del WAF",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        1200,
+        315
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "waf-dev-api",
+      "from": "waf",
+      "to": "dev-apps",
+      "label": "API · TLS privado",
+      "fromSide": "left",
+      "toSide": "top",
+      "labelAt": [
+        500,
+        420
+      ],
+      "variant": "emphasis",
+      "via": [
+        [
+          500,
+          320
+        ],
+        [
+          500,
+          400
+        ],
+        [
+          210,
+          400
+        ]
+      ]
+    },
+    {
+      "id": "waf-prod-api",
+      "from": "waf",
+      "to": "prod-apps",
+      "label": "API · TLS privado",
+      "fromSide": "right",
+      "toSide": "top",
+      "labelAt": [
+        1270,
+        420
+      ],
+      "variant": "emphasis",
+      "via": [
+        [
+          1270,
+          320
+        ],
+        [
+          1270,
+          400
+        ],
+        [
+          1530,
+          400
+        ]
+      ]
+    },
+    {
+      "id": "waf-certificates",
+      "from": "waf",
+      "to": "certificates",
+      "label": "HTTP-01 por ruta privada",
+      "fromSide": "right",
+      "toSide": "right",
+      "labelAt": [
+        1210,
+        670
+      ],
+      "variant": "security",
+      "via": [
+        [
+          1210,
+          320
+        ],
+        [
+          1210,
+          780
+        ]
+      ]
+    },
+    {
+      "id": "dev-apps-egress",
+      "from": "dev-apps",
+      "to": "firewall",
+      "label": "UDR + peering",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        520,
+        550
+      ],
+      "variant": "security",
+      "via": [
+        [
+          470,
+          550
+        ],
+        [
+          470,
+          550
+        ]
+      ]
+    },
+    {
+      "id": "prod-apps-egress",
+      "from": "prod-apps",
+      "to": "firewall",
+      "label": "UDR + peering",
+      "fromSide": "left",
+      "toSide": "right",
+      "labelAt": [
+        1180,
+        550
+      ],
+      "variant": "security"
+    },
+    {
+      "id": "dev-functions-egress",
+      "from": "dev-functions",
+      "to": "firewall",
+      "label": "Salida Functions",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        430,
+        680
+      ],
+      "variant": "security",
+      "via": [
+        [
+          430,
+          780
+        ],
+        [
+          430,
+          640
+        ],
+        [
+          680,
+          640
+        ],
+        [
+          680,
+          550
+        ]
+      ]
+    },
+    {
+      "id": "prod-functions-egress",
+      "from": "prod-functions",
+      "to": "firewall",
+      "label": "Salida Functions",
+      "fromSide": "left",
+      "toSide": "right",
+      "labelAt": [
+        1300,
+        680
+      ],
+      "variant": "security",
+      "via": [
+        [
+          1300,
+          780
+        ],
+        [
+          1300,
+          640
+        ],
+        [
+          1020,
+          640
+        ],
+        [
+          1020,
+          550
+        ]
+      ]
+    },
+    {
+      "id": "runner-egress",
+      "from": "github-agent",
+      "to": "firewall",
+      "label": "Salida del agente",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [
+        650,
+        680
+      ],
+      "variant": "dashed",
+      "via": [
+        [
+          690,
+          650
+        ],
+        [
+          800,
+          650
+        ],
+        [
+          800,
+          630
+        ],
+        [
+          850,
+          630
+        ]
+      ]
+    },
+    {
+      "id": "certificate-egress",
+      "from": "certificates",
+      "to": "firewall",
+      "label": "ACME y servicios privados",
+      "fromSide": "top",
+      "toSide": "right",
+      "labelAt": [
+        1120,
+        675
+      ],
+      "variant": "dashed",
+      "via": [
+        [
+          1030,
+          690
+        ],
+        [
+          1120,
+          690
+        ],
+        [
+          1120,
+          610
+        ],
+        [
+          1020,
+          610
+        ],
+        [
+          1020,
+          550
+        ]
+      ]
+    },
+    {
+      "id": "firewall-dev-data",
+      "from": "firewall",
+      "to": "dev-data",
+      "label": "Solo Dev y operador",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "labelAt": [
+        450,
+        910
+      ],
+      "variant": "security",
+      "via": [
+        [
+          850,
+          660
+        ],
+        [
+          450,
+          660
+        ],
+        [
+          450,
+          1010
+        ]
+      ]
+    },
+    {
+      "id": "firewall-prod-data",
+      "from": "firewall",
+      "to": "prod-data",
+      "label": "Solo Prod y operador",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "labelAt": [
+        1280,
+        910
+      ],
+      "variant": "security",
+      "via": [
+        [
+          850,
+          680
+        ],
+        [
+          1280,
+          680
+        ],
+        [
+          1280,
+          1010
+        ]
+      ]
+    },
+    {
+      "id": "firewall-shared-data",
+      "from": "firewall",
+      "to": "shared-pe",
+      "label": "Servicios comunes autorizados",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        850,
+        900
+      ],
+      "variant": "security"
+    },
+    {
+      "id": "firewall-external",
+      "from": "firewall",
+      "to": "external-services",
+      "label": "HTTPS permitido",
+      "fromSide": "left",
+      "toSide": "bottom",
+      "labelAt": [
+        420,
+        230
+      ],
+      "variant": "dashed",
+      "via": [
+        [
+          455,
+          550
+        ],
+        [
+          455,
+          210
+        ],
+        [
+          410,
+          210
+        ]
+      ]
+    },
+    {
+      "id": "dev-pe-paas",
+      "from": "dev-data",
+      "to": "dev-paas",
+      "label": "Private Link · 443 / 10255",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        210,
+        1215
+      ],
+      "variant": "security"
+    },
+    {
+      "id": "prod-pe-paas",
+      "from": "prod-data",
+      "to": "prod-paas",
+      "label": "Private Link · 443 / 10255",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        1530,
+        1215
+      ],
+      "variant": "security"
+    },
+    {
+      "id": "shared-pe-paas",
+      "from": "shared-pe",
+      "to": "shared-paas",
+      "label": "Private Link · HTTPS 443",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        850,
+        1215
+      ],
+      "variant": "security"
+    },
+    {
+      "id": "dns-links",
+      "from": "shared-paas",
+      "to": "private-dns",
+      "label": "Nombres privados",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        850,
+        1490
+      ],
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Entrada de los usuarios",
+      "items": [
+        "El navegador descarga las webs y consulta APIs por el WAF compartido. El origen Static Web Apps sigue siendo un endpoint público, con allowedIpRanges limitado a la IP pública del WAF; no se despliega un Private Endpoint para esas webs.",
+        "WAF → Nginx usa HTTPS privado. Nginx solo admite la subred del gateway; las APIs tienen ingress interno al entorno ACA y validan identidad, rol y propietario.",
+        "HTTP 80 solo sirve /.well-known/acme-challenge/*; las demás rutas redirigen a HTTPS. La conexión WAF → orígenes valida cadena TLS y SNI."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Salida, administración y aislamiento",
+      "items": [
+        "Las UDR de apps y Functions incluyen rutas específicas hacia endpoints/datos por el Firewall. Las políticas de red de los PE están activadas y los NSG restringen entrada/salida; el Firewall hace SNAT para mantener el retorno.",
+        "Dev no puede acceder a los datos de Prod, ni Prod a los de Dev. No hay peering directo entre spokes. La administración autorizada tiene reglas específicas para ambos entornos.",
+        "El agente inicia HTTPS saliente a GitHub para recibir trabajos. No necesita una IP pública ni conexiones entrantes desde GitHub. Repo, etiquetas y permisos OIDC se configuran por separado.",
+        "La subred del Application Gateway no tiene una UDR 0/0 al Firewall: sus conexiones a SWA y su integración de plataforma siguen el diseño del gateway."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Identidad, DNS y excepciones explícitas",
+      "items": [
+        "Cosmos, Storage, Functions, Event Grid habilitado y vaults mantienen acceso público deshabilitado. El PaaS está fuera de la VNet: dentro están sus interfaces Private Endpoint y las integraciones de cómputo.",
+        "El vault TLS conserva bypass AzureServices para que Application Gateway valide su secreto. Su identidad solo puede leer waf-tls. Los vaults de aplicación usan bypass None.",
+        "El emisor privado de certificados lee su cuenta ACME en AKV y usa un lease en certificate-locks. No tiene permiso para leer el contenedor tfstate.",
+        "Las zonas DNS y vínculos son recursos de control globales, no servidores alojados en una subred. Los nombres privados los resuelve el proxy DNS del Firewall.",
+        "CIDR, capacidades y regiones son valores de referencia. El detalle y los recuentos de objetos están en Recursos incluidos; carga, restauración y acceso corporativo requieren validación propia."
+      ]
+    }
+  ]
+}

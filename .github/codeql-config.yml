@@ -1,0 +1,4 @@
+name: Goliat Nexus security queries
+paths-ignore:
+  - site/vendor/**
+  - site/docs/**

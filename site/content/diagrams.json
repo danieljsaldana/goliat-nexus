@@ -1,0 +1,46 @@
+[
+  {
+    "id": "overview",
+    "title": {
+      "es": "Arquitectura hub & spokes",
+      "en": "Hub & spokes architecture"
+    },
+    "description": {
+      "es": "El hub central comparte WAF, Firewall, imágenes, DNS y observabilidad. Dev y Prod conservan sus portales, APIs, Functions y datos propios. Selecciona un componente para explorar sus conexiones.",
+      "en": "The central hub shares WAF, Firewall, images, DNS and observability. Dev and Prod retain their own portals, APIs, Functions and data. Select a component to explore its connections."
+    }
+  },
+  {
+    "id": "network",
+    "title": {
+      "es": "Red y seguridad",
+      "en": "Network and security"
+    },
+    "description": {
+      "es": "Subredes, peerings, WAF, Firewall, endpoints privados y flujos permitidos. Los servicios PaaS se dibujan fuera de las VNets; sus endpoints, dentro.",
+      "en": "Subnets, peerings, WAF, Firewall, private endpoints and allowed flows. PaaS services sit outside the VNets; their endpoints sit inside."
+    }
+  },
+  {
+    "id": "application",
+    "title": {
+      "es": "Aplicación y eventos",
+      "en": "Application and events"
+    },
+    "description": {
+      "es": "Sigue una solicitud desde el portal: identidad, API, Cosmos, cola y Function. Incluye recuperación e idempotencia.",
+      "en": "Follow a request from the portal: identity, API, Cosmos, queue and Function. Includes recovery and idempotency."
+    }
+  },
+  {
+    "id": "deployment",
+    "title": {
+      "es": "Despliegue y estados",
+      "en": "Deployment and states"
+    },
+    "description": {
+      "es": "Cinco estados con dependencias explícitas y un SPN por instalación. Cada capa aplica el mismo plan guardado que se ha revisado.",
+      "en": "Five states with explicit dependencies and one SPN per installation. Each layer applies its reviewed saved plan."
+    }
+  }
+]

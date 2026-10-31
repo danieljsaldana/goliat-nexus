@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Plataforma única · Dos workloads independientes",
+    "output": "deployment.html",
+    "locale": "es",
+    "quality_profile": "standard",
+    "animation": "none"
+  },
+  "components": [
+    {
+      "id": "config",
+      "type": "external",
+      "label": "Tres tfvars comentados",
+      "sublabel": "common.tfvars · dev.tfvars · prod.tfvars",
+      "tag": "environments/ o examples/demo/",
+      "pos": [
+        50,
+        60
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "entra",
+      "type": "external",
+      "label": "Operador + SPN de instalación",
+      "sublabel": "Entra con usuario · Azure con SPN",
+      "tag": "Certificado temporal · SPN hasta el desmontaje",
+      "pos": [
+        425,
+        60
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "foundation",
+      "type": "backend",
+      "label": "Foundation",
+      "sublabel": "Backend y permisos del estado",
+      "tag": "Se despliega una vez",
+      "pos": [
+        50,
+        330
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "platform",
+      "type": "backend",
+      "label": "Platform",
+      "sublabel": "Hub y servicios comunes",
+      "tag": "Red y datos de Dev y Prod",
+      "pos": [
+        425,
+        330
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "dev",
+      "type": "backend",
+      "label": "Workload Dev",
+      "sublabel": "Secretos → Recursos → Código",
+      "tag": "Imágenes digest · Functions · Portales",
+      "pos": [
+        800,
+        230
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "prod",
+      "type": "backend",
+      "label": "Workload Prod",
+      "sublabel": "Secretos → Recursos → Código",
+      "tag": "Imágenes digest · Functions · Portales",
+      "pos": [
+        800,
+        560
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "remote",
+      "type": "cloud",
+      "label": "Cinco estados separados",
+      "sublabel": "Base: 4 estados · Entrada: edge",
+      "tag": "Un contenedor y backend compartidos",
+      "pos": [
+        50,
+        650
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "contracts",
+      "type": "cloud",
+      "label": "Contratos de consumo",
+      "sublabel": "ACR/Logs comunes · Recursos por entorno",
+      "tag": "Outputs reales de Platform",
+      "pos": [
+        425,
+        650
+      ],
+      "size": [
+        250,
+        90
+      ]
+    },
+    {
+      "id": "edge",
+      "type": "security",
+      "label": "Edge · Entrada compartida",
+      "sublabel": "WAF + certificado + rutas de portales",
+      "tag": "Comprobar HTTPS público válido",
+      "pos": [
+        1175,
+        395
+      ],
+      "size": [
+        260,
+        90
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Fundación compartida",
+      "wraps": [
+        "foundation",
+        "remote"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "Plataforma compartida",
+      "wraps": [
+        "platform",
+        "contracts"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "config-foundation",
+      "from": "config",
+      "to": "foundation",
+      "label": "Validar y preparar",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        175,
+        225
+      ]
+    },
+    {
+      "id": "foundation-platform",
+      "from": "foundation",
+      "to": "platform",
+      "label": "Contrato Foundation",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        362,
+        375
+      ]
+    },
+    {
+      "id": "platform-dev",
+      "from": "platform",
+      "to": "dev",
+      "label": "environments.dev",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        737,
+        280
+      ]
+    },
+    {
+      "id": "platform-prod",
+      "from": "platform",
+      "to": "prod",
+      "label": "environments.prod",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        737,
+        500
+      ]
+    },
+    {
+      "id": "foundation-remote",
+      "from": "foundation",
+      "to": "remote",
+      "label": "Migración de bootstrap",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        175,
+        540
+      ]
+    },
+    {
+      "id": "platform-contracts",
+      "from": "platform",
+      "to": "contracts",
+      "label": "Outputs compartidos",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        550,
+        540
+      ]
+    },
+    {
+      "id": "dev-edge",
+      "from": "dev",
+      "to": "edge",
+      "label": "Origen Dev listo",
+      "fromSide": "right",
+      "toSide": "top",
+      "labelAt": [
+        1305,
+        290
+      ]
+    },
+    {
+      "id": "prod-edge",
+      "from": "prod",
+      "to": "edge",
+      "label": "Origen Prod listo",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "labelAt": [
+        1305,
+        590
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "De configuración a aplicación",
+      "items": [
+        "configure genera copias comentadas con identidades reales. Foundation crea y migra el backend; Platform crea el hub y los recursos compartidos y por entorno.",
+        "Desde el ejecutor privado, el CLI construye imágenes, registra secretos en Key Vault, aplica el workload y publica Functions y portales. Cada entorno conserva su estado y manifiesto de imágenes."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Demo separada",
+      "items": [
+        "La demo tiene otro nombre y sus propios Dev/Prod con hub compartido entre ellos. No usa el estado de una instalación del producto.",
+        "Esta versión no migra PostgreSQL de 0.3. Usa un nombre nuevo y un procedimiento explícito de traslado de datos."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Qué hace cada fase",
+      "items": [
+        "Foundation prepara el backend y migra su propio estado. Platform crea la base compartida y los servicios de cada entorno.",
+        "Dev y Prod consumen esos outputs. Desde el ejecutor privado se registran secretos, se aplican las aplicaciones y se publica su código. verify-application crea una solicitud real y comprueba su actividad; no es la simulación de esta web."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Identidad de la instalación",
+      "items": [
+        "El primer despliegue crea el SPN y los permisos acotados. Los siguientes reutilizan el mismo principal, con un certificado nuevo que se revoca al terminar. AzureAD conserva la sesión del operador.",
+        "cleanup-identity es el paso final tras el desmontaje revisado de la infraestructura. No elimina el SPN mientras exista alguno de los cinco grupos. Eliminar recursos en el Portal no elimina automáticamente una aplicación de Entra."
+      ]
+    }
+  ]
+}

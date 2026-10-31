@@ -1,0 +1,29 @@
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/index.htm
+  Cache-Control: no-cache
+/site/
+  Cache-Control: no-cache
+/site/index.html
+  Cache-Control: no-cache
+/site/index.htm
+  Cache-Control: no-cache
+/content/configuration.json
+  Cache-Control: no-store
+/site/content/configuration.json
+  Cache-Control: no-store
+/diagrams/*
+  Cache-Control: no-cache
+/site/diagrams/*
+  Cache-Control: no-cache
+/docs/*
+  Cache-Control: no-cache
+/site/docs/*
+  Cache-Control: no-cache
+
+/downloads/*
+  Cache-Control: no-cache
+/site/downloads/*
+  Cache-Control: no-cache

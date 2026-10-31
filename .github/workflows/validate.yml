@@ -1,0 +1,183 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  TF_IN_AUTOMATION: 'true'
+  NEXT_TELEMETRY_DISABLED: '1'
+jobs:
+  source-security:
+    name: Source and history security
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.15'
+      - run: python3 scripts/install_gitleaks.py
+      - run: python3 scripts/check_publication.py --history --strict-tracked
+  workflows:
+    name: Workflow and shell validation
+    needs: source-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.15'
+      - run: python3 scripts/install_actionlint.py
+      - run: .lz/security-tools/actionlint -color
+      - run: shellcheck scripts/check_images.sh .githooks/pre-push
+  orchestrator:
+    name: Orchestrator tests
+    needs: source-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.15'
+      - name: Test configuration, identities, secrets and publication
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 scripts/check_wiki.py
+  terraform:
+    name: Terraform and security plans (mock providers)
+    needs: source-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.15'
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: '1.17.1'
+          terraform_wrapper: false
+      - run: make fmt check validate
+      - run: make inventory docs
+      - name: Detect stale reference inventory
+        run: git diff --exit-code -- docs/INVENTARIO_TERRAFORM.json
+  application:
+    name: Application tests and static portals
+    needs: source-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            apps/api/package-lock.json
+            apps/functions/package-lock.json
+            apps/portal/package-lock.json
+      - run: npm --prefix apps/api ci --ignore-scripts
+      - run: npm --prefix apps/functions ci --ignore-scripts
+      - run: node --test tests/application.test.mjs tests/portal-api.test.mjs apps/api/tests/*.test.mjs
+      - run: npm --prefix apps/portal ci --ignore-scripts
+      - run: npm --prefix apps/portal run build
+  dependencies:
+    name: Dependency audit (${{ matrix.package }})
+    needs: source-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ['.', apps/api, apps/functions, apps/portal, apps/certificates]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Block high and critical dependency vulnerabilities
+        working-directory: ${{ matrix.package }}
+        run: npm audit --audit-level=high
+  images:
+    name: Container image smoke test
+    needs: source-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: make images-check
+  website:
+    name: Website, icons and audited documentation
+    needs: source-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.15'
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Verify the versioned icon sprite
+        run: |
+          npm run icons
+          git diff --exit-code -- site/assets/icons.svg site/assets/Lucide-LICENSE.txt
+      - run: make site site-check
+      - run: python3 scripts/install_gitleaks.py
+      - run: python3 scripts/check_publication.py --strict-tracked --artifacts dist
+      - name: Retain only audited static output on main
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: nexus-site-${{ github.sha }}
+          path: dist/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+  required:
+    name: CI passed
+    if: always()
+    needs: [source-security, workflows, orchestrator, terraform, application, dependencies, images, website]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every validation job to succeed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PYTHON'
+          import json, os
+          results = json.loads(os.environ['RESULTS'])
+          failed = [name for name, job in results.items() if job['result'] != 'success']
+          if failed:
+              raise SystemExit('Required jobs failed or were skipped: ' + ', '.join(failed))
+          PYTHON

@@ -1,0 +1,18 @@
+{
+  "name": "alba-reference-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build --webpack && node scripts/finalize.mjs"
+  },
+  "dependencies": {
+    "next": "16.4.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "@azure/msal-browser": "5.27.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Goliat - Nexus",
+  "version": "1.0.0",
+  "repository": "https://github.com/danieljsaldana/goliat-nexus",
+  "website": "https://danieljsaldana.github.io/goliat-nexus/",
+  "author": {
+    "name": "Daniel J. Saldaña",
+    "url": "https://danieljsaldana.dev/"
+  },
+  "description": "Plataforma modular para Azure: un hub compartido, Dev y Prod separados y una aplicación con Next.js, Node.js, Cosmos DB y Azure Functions.",
+  "social_image": "assets/social-card.png",
+  "social_image_alt": "Goliat Nexus. Plataforma Azure con un hub compartido y aplicaciones privadas en Dev y Prod.",
+  "locale": "es_ES"
+}

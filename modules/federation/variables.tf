@@ -1,0 +1,9 @@
+variable "prefix" { type = string }
+variable "resource_group_name" { type = string }
+variable "resource_group_id" { type = string }
+variable "location" { type = string }
+variable "github_repository" { type = string }
+variable "github_environment" { type = string }
+variable "registry_id" { type = string }
+variable "app_identity_id" { type = string }
+variable "tags" { type = map(string) }

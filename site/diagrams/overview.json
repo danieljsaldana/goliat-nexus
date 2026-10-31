@@ -1,0 +1,379 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Un hub. Dos entornos.",
+    "subtitle": "Una base compartida para Dev y Prod. Aplicaciones, identidades y datos separados.",
+    "output": "overview.html",
+    "locale": "es",
+    "quality_profile": "standard",
+    "animation": "none"
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "Usuarios + Entra ID",
+      "sublabel": "Navegador · Identidad y permisos",
+      "tag": "Una entrada HTTPS para webs y APIs",
+      "pos": [
+        480,
+        25
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "waf",
+      "type": "security",
+      "label": "WAF compartido",
+      "sublabel": "Application Gateway · HTTPS público",
+      "tag": "Protege la entrada de ambos entornos",
+      "pos": [
+        480,
+        200
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "shared",
+      "type": "cloud",
+      "label": "Servicios compartidos",
+      "sublabel": "Firewall · ACR · DNS · Logs · Estado",
+      "tag": "Una base común, sin duplicar servicios",
+      "pos": [
+        480,
+        380
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "github-agent",
+      "type": "backend",
+      "label": "Agente GitHub · opcional",
+      "sublabel": "VM privada · Terraform y despliegue",
+      "tag": "Sin IP pública · Permisos configurables",
+      "pos": [
+        480,
+        560
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "dev-web",
+      "type": "frontend",
+      "label": "Portales Next.js",
+      "sublabel": "Static Web Apps · tenant + admin",
+      "tag": "Origen restringido a la IP del WAF",
+      "pos": [
+        50,
+        200
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "dev-apps",
+      "type": "backend",
+      "label": "APIs y eventos",
+      "sublabel": "Container Apps · Node.js · Functions",
+      "tag": "Gateway privado · Cola + recuperación",
+      "pos": [
+        50,
+        380
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "dev-data",
+      "type": "database",
+      "label": "Datos y secretos",
+      "sublabel": "Cosmos MongoDB · Storage · Key Vault",
+      "tag": "Private Endpoints · Identidades propias",
+      "pos": [
+        50,
+        560
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-web",
+      "type": "frontend",
+      "label": "Portales Next.js",
+      "sublabel": "Static Web Apps · tenant + admin",
+      "tag": "Origen restringido a la IP del WAF",
+      "pos": [
+        910,
+        200
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-apps",
+      "type": "backend",
+      "label": "APIs y eventos",
+      "sublabel": "Container Apps · Node.js · Functions",
+      "tag": "Gateway privado · Cola + recuperación",
+      "pos": [
+        910,
+        380
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    },
+    {
+      "id": "prod-data",
+      "type": "database",
+      "label": "Datos y secretos",
+      "sublabel": "Cosmos MongoDB · Storage · Key Vault",
+      "tag": "Private Endpoints · Identidades propias",
+      "pos": [
+        910,
+        560
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "brand": "microsoft-azure"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "DEV · ENTORNO PROPIO",
+      "wraps": [
+        "dev-web",
+        "dev-apps",
+        "dev-data"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "HUB · SE CREA UNA VEZ",
+      "wraps": [
+        "waf",
+        "shared",
+        "github-agent"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "PROD · ENTORNO PROPIO",
+      "wraps": [
+        "prod-web",
+        "prod-apps",
+        "prod-data"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "users-waf",
+      "from": "users",
+      "to": "waf",
+      "label": "HTTPS",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        630,
+        155
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "waf-dev-web",
+      "from": "waf",
+      "to": "dev-web",
+      "label": "Web",
+      "fromSide": "left",
+      "toSide": "right",
+      "labelAt": [
+        415,
+        245
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "waf-dev-api",
+      "from": "waf",
+      "to": "dev-apps",
+      "label": "API privada",
+      "fromSide": "left",
+      "toSide": "top",
+      "labelAt": [
+        415,
+        320
+      ],
+      "via": [
+        [
+          415,
+          245
+        ],
+        [
+          415,
+          330
+        ],
+        [
+          200,
+          330
+        ]
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "dev-shared",
+      "from": "dev-apps",
+      "to": "shared",
+      "label": "Usa el hub",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        415,
+        425
+      ],
+      "variant": "dashed"
+    },
+    {
+      "id": "dev-private",
+      "from": "dev-apps",
+      "to": "dev-data",
+      "label": "Acceso privado",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        200,
+        515
+      ],
+      "variant": "security"
+    },
+    {
+      "id": "waf-prod-web",
+      "from": "waf",
+      "to": "prod-web",
+      "label": "Web",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        845,
+        245
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "waf-prod-api",
+      "from": "waf",
+      "to": "prod-apps",
+      "label": "API privada",
+      "fromSide": "right",
+      "toSide": "top",
+      "labelAt": [
+        845,
+        320
+      ],
+      "via": [
+        [
+          845,
+          245
+        ],
+        [
+          845,
+          330
+        ],
+        [
+          1060,
+          330
+        ]
+      ],
+      "variant": "emphasis"
+    },
+    {
+      "id": "prod-shared",
+      "from": "prod-apps",
+      "to": "shared",
+      "label": "Usa el hub",
+      "fromSide": "left",
+      "toSide": "right",
+      "labelAt": [
+        845,
+        425
+      ],
+      "variant": "dashed"
+    },
+    {
+      "id": "prod-private",
+      "from": "prod-apps",
+      "to": "prod-data",
+      "label": "Acceso privado",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        1060,
+        515
+      ],
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1 · Entrada protegida",
+      "items": [
+        "El navegador obtiene los portales y llama a las APIs por el WAF del hub. Entra autentica al usuario; cada API comprueba su token, rol y propietario.",
+        "El WAF llega a Static Web Apps por HTTPS con el origen restringido a su IP, y al gateway Nginx por red privada."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "2 · Cada entorno es suyo",
+      "items": [
+        "Dev y Prod tienen sus propios portales, Container Apps, Functions, identidades, Cosmos, Storage y Key Vault. No hay peering directo entre sus spokes.",
+        "La API guarda en Cosmos y publica en Storage Queue. La Function procesa el evento y registra la actividad; un timer recupera publicaciones pendientes. Este flujo permanece privado y no pasa por el WAF."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "3 · Comparte la base",
+      "items": [
+        "WAF, Firewall, ACR, DNS privado, logs y estado Terraform se crean una vez y los consumen ambos entornos. Compartir evita duplicar servicios fijos; su coste y capacidad siguen siendo comunes.",
+        "El agente opcional ejecuta GitHub Actions desde una VM privada del hub, sin IP pública y sin roles Azure por defecto.",
+        "Esta es una vista lógica, no un plano de subredes. Los servicios PaaS no residen dentro de las VNets. La vista Red y seguridad muestra subredes, rutas y Private Endpoints; la tabla de recursos conserva el inventario detallado."
+      ]
+    }
+  ]
+}

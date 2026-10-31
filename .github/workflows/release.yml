@@ -1,0 +1,60 @@
+name: Prepare draft release (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version matching VERSION (for example 1.0.0)
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: release
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/validate.yml
+    permissions:
+      contents: read
+  draft:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: write
+      actions: read
+    env:
+      RELEASE_VERSION: ${{ inputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.15'
+      - run: python3 scripts/install_gitleaks.py
+      - run: python3 scripts/check_publication.py --history --strict-tracked
+      - name: Prepare versioned assets and checksums
+        run: python3 scripts/prepare_release.py --version "$RELEASE_VERSION" --output .local/release
+      - run: python3 scripts/check_publication.py --artifacts .local/release --strict-tracked
+      - name: Require a clean source checkout
+        run: git diff --exit-code
+      - name: Create a draft for human review
+        env:
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          tag="v$RELEASE_VERSION"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo 'Release already exists; existing assets will not be replaced.' >&2
+            exit 1
+          fi
+          gh release create "$tag" \
+            .local/release/SOURCE_SHA256SUMS \
+            .local/release/provenance.json \
+            --target "$GITHUB_SHA" --title "Goliat Nexus $RELEASE_VERSION" \
+            --draft --notes-file .local/release/release-notes.md

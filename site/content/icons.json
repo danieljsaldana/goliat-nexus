@@ -1,0 +1,31 @@
+{
+  "library": "lucide-static",
+  "version": "1.66.0",
+  "icons": {
+    "network": "network",
+    "layers": "layers",
+    "globe": "globe",
+    "window": "panels-top-left",
+    "container": "container",
+    "bolt": "zap",
+    "events": "workflow",
+    "database": "database",
+    "storage": "hard-drive",
+    "identity": "user-round-check",
+    "key": "key-round",
+    "shield": "shield-check",
+    "terminal": "square-terminal",
+    "server": "server",
+    "chart": "chart-no-axes-combined",
+    "wallet": "wallet",
+    "check": "circle-check",
+    "user": "user-round",
+    "lock": "lock-keyhole",
+    "star": "star",
+    "external-link": "external-link",
+    "heart": "heart",
+    "request": "clipboard-check",
+    "maintenance": "wrench",
+    "support": "headset"
+  }
+}

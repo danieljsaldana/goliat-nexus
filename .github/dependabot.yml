@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      actions-compatible:
+        update-types: [minor, patch]
+  - package-ecosystem: npm
+    directories: [/, /apps/api, /apps/functions, /apps/portal, /apps/certificates]
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      compatible:
+        update-types: [minor, patch]
+  - package-ecosystem: terraform
+    directory: /terraform
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

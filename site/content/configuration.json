@@ -1,0 +1,333 @@
+{
+  "version": "1.0.0",
+  "provider_version": "5.12.0",
+  "terraform_required": ">= 1.9.0, < 2.0.0",
+  "sources": {
+    "VERSION": "59854984853104df5c353e2f681a15fc7924742f9a2e468c29af248dce45ce03",
+    "terraform/common.tf": "9b861aba8509796c7100474ecd1be1779b7b4d86ab9e45d441170d328b11d007",
+    "docs/INVENTARIO_TERRAFORM.json": "0286b16d3c3a81130f6f4b5938daf908d7eb8db4d1c280eb6526fa610a05dc31",
+    "docs/VERSIONES.json": "901a7845a6b959a6bddb6057815c133fd2b78075503d83ef5113e00862125c22",
+    "environments/common.tfvars": "a15770f6b274013a0a49eb16bc9531b5482863c41c7ba7a2cfe10cac461f55b3",
+    "environments/dev.tfvars": "208a52661953059fae7ccc6dba2cfe7adbc05fd1a331b61a42deb4beee6d21dd",
+    "environments/prod.tfvars": "83bfc87c676493195bb1414b36926dc53e7ed717366e4768427d0c446a97fd3e",
+    "examples/demo/common.tfvars": "bc9a814cbcbb36881a95e3cc7358ec7aa1fa810a5604b81f4fd480c52af5131a",
+    "examples/demo/dev.tfvars": "fadebdb30ef0f46482cd8f556b356e54bb78215ca29e82301fd424c426634032",
+    "examples/demo/prod.tfvars": "6372ec6b715beb15e2927b425e9c28dc4f71c46aaa062073d89a8807112c927c"
+  },
+  "presets": {
+    "product": {
+      "name": "acmev1",
+      "directory": "environments",
+      "location": "westeurope",
+      "budget_amount": 300,
+      "public_entrypoint": {
+        "enabled": true,
+        "hostname": "",
+        "environment_hostnames": {},
+        "minimum_instances": 1,
+        "maximum_instances": 2,
+        "certificate_secret_id": "",
+        "acme_directory_url": "https://acme-v02.api.letsencrypt.org/directory"
+      },
+      "environments": {
+        "dev": {
+          "zone_redundancy": false,
+          "deploy_demo": false,
+          "network": {
+            "apps_subnet_cidr": "10.10.0.0/23",
+            "data_subnet_cidr": "10.10.2.0/27",
+            "functions_subnet_cidr": "10.10.3.0/27",
+            "vnet_cidr": "10.10.0.0/16"
+          },
+          "sample": {
+            "version": "1.0.0",
+            "frontend_min_replicas": 0,
+            "frontend_max_replicas": 2,
+            "api_min_replicas": 0,
+            "api_max_replicas": 3,
+            "frontend_port": 8080,
+            "api_port": 8000,
+            "cpu": 0.25,
+            "memory": "0.5Gi",
+            "http_concurrency": 50
+          },
+          "cosmosdb_config": {
+            "location": null,
+            "database_name": "requests",
+            "mongo_server_version": "7.0",
+            "is_serverless": true,
+            "throughput": null,
+            "max_throughput": null,
+            "free_tier_enabled": false,
+            "backup_interval_minutes": 240,
+            "backup_retention_hours": 8,
+            "backup_storage_redundancy": "Local"
+          },
+          "storage": {
+            "replication": "LRS",
+            "content_cool_after_days": 30,
+            "soft_delete_days": 14
+          },
+          "functions": {
+            "runtime_version": "24",
+            "maximum_instances": 40,
+            "memory_mb": 2048
+          },
+          "web": {
+            "sku": "Standard",
+            "location": "westeurope"
+          },
+          "web_portals": {
+            "admin": {
+              "view": "admin"
+            },
+            "tenant": {
+              "view": "tenant"
+            }
+          },
+          "enable_dns": true,
+          "enable_api_platform": true,
+          "enable_api_tenant": true,
+          "enable_api_activities": true,
+          "enable_storage_account": true,
+          "enable_cosmosdb": true,
+          "enable_content_storage": true,
+          "enable_key_vault": true,
+          "enable_event_processing": true,
+          "enable_event_grid": false
+        },
+        "prod": {
+          "zone_redundancy": true,
+          "deploy_demo": false,
+          "network": {
+            "apps_subnet_cidr": "10.20.0.0/23",
+            "data_subnet_cidr": "10.20.2.0/27",
+            "functions_subnet_cidr": "10.20.3.0/27",
+            "vnet_cidr": "10.20.0.0/16"
+          },
+          "sample": {
+            "version": "1.0.0",
+            "frontend_min_replicas": 2,
+            "frontend_max_replicas": 3,
+            "api_min_replicas": 2,
+            "api_max_replicas": 5,
+            "frontend_port": 8080,
+            "api_port": 8000,
+            "cpu": 0.25,
+            "memory": "0.5Gi",
+            "http_concurrency": 50
+          },
+          "cosmosdb_config": {
+            "location": null,
+            "database_name": "requests",
+            "mongo_server_version": "7.0",
+            "is_serverless": false,
+            "throughput": 400,
+            "max_throughput": null,
+            "free_tier_enabled": false,
+            "backup_interval_minutes": 240,
+            "backup_retention_hours": 24,
+            "backup_storage_redundancy": "Local"
+          },
+          "storage": {
+            "replication": "LRS",
+            "content_cool_after_days": 30,
+            "soft_delete_days": 14
+          },
+          "functions": {
+            "runtime_version": "24",
+            "maximum_instances": 40,
+            "memory_mb": 2048
+          },
+          "web": {
+            "sku": "Standard",
+            "location": "westeurope"
+          },
+          "web_portals": {
+            "admin": {
+              "view": "admin"
+            },
+            "tenant": {
+              "view": "tenant"
+            }
+          },
+          "enable_dns": true,
+          "enable_api_platform": true,
+          "enable_api_tenant": true,
+          "enable_api_activities": true,
+          "enable_storage_account": true,
+          "enable_cosmosdb": true,
+          "enable_content_storage": true,
+          "enable_key_vault": true,
+          "enable_event_processing": true,
+          "enable_event_grid": false
+        }
+      },
+      "inventory": {
+        "foundation": 4,
+        "platform": 279,
+        "dev": 28,
+        "prod": 28,
+        "edge": 6
+      },
+      "total": 345
+    },
+    "demo": {
+      "name": "lzdemov1",
+      "directory": "examples/demo",
+      "location": "westeurope",
+      "budget_amount": 300,
+      "public_entrypoint": {
+        "enabled": true,
+        "hostname": "",
+        "environment_hostnames": {},
+        "minimum_instances": 1,
+        "maximum_instances": 2,
+        "certificate_secret_id": "",
+        "acme_directory_url": "https://acme-v02.api.letsencrypt.org/directory"
+      },
+      "environments": {
+        "dev": {
+          "zone_redundancy": false,
+          "deploy_demo": true,
+          "network": {
+            "apps_subnet_cidr": "10.10.0.0/23",
+            "data_subnet_cidr": "10.10.2.0/27",
+            "functions_subnet_cidr": "10.10.3.0/27",
+            "vnet_cidr": "10.10.0.0/16"
+          },
+          "sample": {
+            "version": "1.0.0",
+            "frontend_min_replicas": 0,
+            "frontend_max_replicas": 2,
+            "api_min_replicas": 0,
+            "api_max_replicas": 3,
+            "frontend_port": 8080,
+            "api_port": 8000,
+            "cpu": 0.25,
+            "memory": "0.5Gi",
+            "http_concurrency": 50
+          },
+          "cosmosdb_config": {
+            "location": null,
+            "database_name": "requests",
+            "mongo_server_version": "7.0",
+            "is_serverless": true,
+            "throughput": null,
+            "max_throughput": null,
+            "free_tier_enabled": false,
+            "backup_interval_minutes": 240,
+            "backup_retention_hours": 8,
+            "backup_storage_redundancy": "Local"
+          },
+          "storage": {
+            "replication": "LRS",
+            "content_cool_after_days": 30,
+            "soft_delete_days": 14
+          },
+          "functions": {
+            "runtime_version": "24",
+            "maximum_instances": 40,
+            "memory_mb": 2048
+          },
+          "web": {
+            "sku": "Standard",
+            "location": "westeurope"
+          },
+          "web_portals": {
+            "admin": {
+              "view": "admin"
+            },
+            "tenant": {
+              "view": "tenant"
+            }
+          },
+          "enable_dns": true,
+          "enable_api_platform": true,
+          "enable_api_tenant": true,
+          "enable_api_activities": true,
+          "enable_storage_account": true,
+          "enable_cosmosdb": true,
+          "enable_content_storage": true,
+          "enable_key_vault": true,
+          "enable_event_processing": true,
+          "enable_event_grid": false
+        },
+        "prod": {
+          "zone_redundancy": true,
+          "deploy_demo": true,
+          "network": {
+            "apps_subnet_cidr": "10.20.0.0/23",
+            "data_subnet_cidr": "10.20.2.0/27",
+            "functions_subnet_cidr": "10.20.3.0/27",
+            "vnet_cidr": "10.20.0.0/16"
+          },
+          "sample": {
+            "version": "1.0.0",
+            "frontend_min_replicas": 2,
+            "frontend_max_replicas": 3,
+            "api_min_replicas": 2,
+            "api_max_replicas": 5,
+            "frontend_port": 8080,
+            "api_port": 8000,
+            "cpu": 0.25,
+            "memory": "0.5Gi",
+            "http_concurrency": 50
+          },
+          "cosmosdb_config": {
+            "location": null,
+            "database_name": "requests",
+            "mongo_server_version": "7.0",
+            "is_serverless": false,
+            "throughput": 400,
+            "max_throughput": null,
+            "free_tier_enabled": false,
+            "backup_interval_minutes": 240,
+            "backup_retention_hours": 24,
+            "backup_storage_redundancy": "Local"
+          },
+          "storage": {
+            "replication": "LRS",
+            "content_cool_after_days": 30,
+            "soft_delete_days": 14
+          },
+          "functions": {
+            "runtime_version": "24",
+            "maximum_instances": 40,
+            "memory_mb": 2048
+          },
+          "web": {
+            "sku": "Standard",
+            "location": "westeurope"
+          },
+          "web_portals": {
+            "admin": {
+              "view": "admin"
+            },
+            "tenant": {
+              "view": "tenant"
+            }
+          },
+          "enable_dns": true,
+          "enable_api_platform": true,
+          "enable_api_tenant": true,
+          "enable_api_activities": true,
+          "enable_storage_account": true,
+          "enable_cosmosdb": true,
+          "enable_content_storage": true,
+          "enable_key_vault": true,
+          "enable_event_processing": true,
+          "enable_event_grid": false
+        }
+      },
+      "inventory": {
+        "foundation": 4,
+        "platform": 279,
+        "dev": 28,
+        "prod": 28,
+        "edge": 6
+      },
+      "total": 345
+    }
+  }
+}

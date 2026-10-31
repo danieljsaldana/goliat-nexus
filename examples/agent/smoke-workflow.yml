@@ -1,0 +1,21 @@
+name: Goliat Nexus private agent smoke test
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  toolchain:
+    runs-on: [goliat-nexus]
+    timeout-minutes: 5
+    steps:
+      - name: Verify Linux and deployment tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = Linux
+          node --version
+          npm --version
+          terraform version
+          az version
+          docker version
+          docker buildx version
+          swa --version

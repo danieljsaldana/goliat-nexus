@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Una petición · Frontend, backend y Functions · v1.0.0",
+    "output": "application.html",
+    "locale": "es",
+    "quality_profile": "standard",
+    "animation": "none"
+  },
+  "components": [
+    {
+      "id": "static",
+      "type": "cloud",
+      "label": "Static Web Apps",
+      "sublabel": "Next.js · Origen Standard restringido",
+      "pos": [
+        30,
+        40
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "Código y configuración pública; sin secretos"
+    },
+    {
+      "id": "frontend",
+      "type": "frontend",
+      "label": "1 · Frontend en el navegador",
+      "sublabel": "El usuario completa y consulta la solicitud",
+      "pos": [
+        430,
+        40
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "Sesión Entra · HTTPS al WAF · Sin VPN"
+    },
+    {
+      "id": "gateway",
+      "type": "backend",
+      "label": "Gateway Nginx privado",
+      "sublabel": "Punto de entrada del Container Apps Env",
+      "pos": [
+        830,
+        40
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "No es el servidor de Next.js"
+    },
+    {
+      "id": "backend",
+      "type": "backend",
+      "label": "2 · Backend Node.js",
+      "sublabel": "Valida · Persiste · Publica el evento",
+      "pos": [
+        1230,
+        40
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "APIs internas al entorno"
+    },
+    {
+      "id": "functions",
+      "type": "backend",
+      "label": "3 · Functions Node.js 24",
+      "sublabel": "Trigger de cola + temporizador de outbox",
+      "pos": [
+        30,
+        390
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "Actividad idempotente; sin HTTP de negocio"
+    },
+    {
+      "id": "queue",
+      "type": "messagebus",
+      "label": "Storage Queue privada",
+      "sublabel": "requests-events · poison tras 5 fallos",
+      "pos": [
+        430,
+        390
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "La Function escucha esta cola"
+    },
+    {
+      "id": "cosmos",
+      "type": "database",
+      "label": "Cosmos DB · MongoDB 7.0",
+      "sublabel": "requests + outbox · activities",
+      "pos": [
+        830,
+        390
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "Cada entorno tiene sus propios datos"
+    },
+    {
+      "id": "vault",
+      "type": "security",
+      "label": "Key Vault de aplicación",
+      "sublabel": "Conexión Cosmos y tokens de publicación",
+      "pos": [
+        1230,
+        390
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "Identidades administradas; acceso por secreto"
+    },
+    {
+      "id": "hostvault",
+      "type": "security",
+      "label": "Key Vault del host Functions",
+      "sublabel": "Claves internas de su Function App",
+      "pos": [
+        30,
+        720
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "Vault separado por host y entorno"
+    },
+    {
+      "id": "shared",
+      "type": "cloud",
+      "label": "Hub compartido por Dev y Prod",
+      "sublabel": "WAF · Firewall · ACR · DNS · Logs",
+      "pos": [
+        430,
+        720
+      ],
+      "size": [
+        270,
+        95
+      ],
+      "tag": "Se despliega una vez y ambos lo consumen"
+    },
+    {
+      "id": "entra",
+      "type": "security",
+      "label": "Microsoft Entra · Por entorno",
+      "sublabel": "PKCE · JWT v2 · Requester / Operator",
+      "tag": "Usuarios/grupos asignados; sin client secret",
+      "pos": [
+        1230,
+        720
+      ],
+      "size": [
+        270,
+        95
+      ]
+    },
+    {
+      "id": "waf",
+      "type": "security",
+      "label": "WAF_v2 compartido",
+      "sublabel": "Inspección OWASP · HTTPS",
+      "tag": "Única entrada de usuarios",
+      "pos": [
+        430,
+        205
+      ],
+      "size": [
+        270,
+        95
+      ]
+    }
+  ],
+  "boundaries": [],
+  "connections": [
+    {
+      "id": "gateway-backend",
+      "from": "gateway",
+      "to": "backend",
+      "label": "/api/ · HTTPS",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        1165,
+        85
+      ]
+    },
+    {
+      "id": "backend-cosmos",
+      "from": "backend",
+      "to": "cosmos",
+      "label": "1. Guardar solicitud + outbox",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        1090,
+        270
+      ]
+    },
+    {
+      "id": "backend-queue",
+      "from": "backend",
+      "to": "queue",
+      "label": "2. Publicar evento con su id",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        620,
+        325
+      ]
+    },
+    {
+      "id": "backend-vault",
+      "from": "backend",
+      "to": "vault",
+      "label": "Leer secreto mediante identidad",
+      "fromSide": "right",
+      "toSide": "right",
+      "labelAt": [
+        1575,
+        275
+      ]
+    },
+    {
+      "id": "queue-function",
+      "from": "queue",
+      "to": "functions",
+      "label": "3. Entrega → trigger",
+      "fromSide": "left",
+      "toSide": "right",
+      "labelAt": [
+        365,
+        435
+      ]
+    },
+    {
+      "id": "function-cosmos",
+      "from": "functions",
+      "to": "cosmos",
+      "label": "4. Actividad + estado · Recuperación de outbox",
+      "fromSide": "bottom",
+      "toSide": "bottom",
+      "labelAt": [
+        680,
+        605
+      ]
+    },
+    {
+      "id": "function-hostvault",
+      "from": "functions",
+      "to": "hostvault",
+      "label": "Claves del host en AKV",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        165,
+        600
+      ]
+    },
+    {
+      "id": "api-entra",
+      "from": "backend",
+      "to": "entra",
+      "label": "Firma, emisor, audiencia y permisos",
+      "fromSide": "left",
+      "toSide": "left",
+      "labelAt": [
+        1140,
+        630
+      ]
+    },
+    {
+      "id": "browser-waf",
+      "from": "frontend",
+      "to": "waf",
+      "label": "Web + API · HTTPS",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        565,
+        170
+      ]
+    },
+    {
+      "id": "waf-static",
+      "from": "waf",
+      "to": "static",
+      "label": "Descarga HTML / JS",
+      "fromSide": "left",
+      "toSide": "bottom",
+      "labelAt": [
+        180,
+        250
+      ]
+    },
+    {
+      "id": "waf-gateway",
+      "from": "waf",
+      "to": "gateway",
+      "label": "API · Ruta privada",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "labelAt": [
+        890,
+        245
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Frontend: dónde se ejecuta",
+      "items": [
+        "Static Web Apps entrega archivos públicos. Es el navegador del usuario el que llama al gateway privado; el servicio Static Web Apps no atraviesa la red privada por él.",
+        "El frontend Next.js se exporta como estático. No requiere servidor Next.js ni contiene secretos de Cosmos. Necesita conectividad privada existente para llegar a la API.",
+        "El ejemplo despliega dos portales: usuario y operaciones. Los flags mantienen tres vistas adicionales opcionales. La sesión usa Entra y PKCE; la vista no concede permisos por sí misma."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Backend: guardar y publicar son pasos distintos",
+      "items": [
+        "La API Node.js valida y escribe la solicitud con outbox_pending=true en un documento. Después publica su id en Storage Queue y limpia esa marca. Cosmos no publica el mensaje automáticamente.",
+        "Si falla el envío, el temporizador de Functions consulta el outbox y reintenta. La solicitud conserva su id y no se vuelve a crear."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Functions: procesar y recuperar",
+      "items": [
+        "El trigger de cola valida el evento, hace upsert de una actividad por id y actualiza la solicitud. La entrega puede repetirse; la actividad no debe duplicarse.",
+        "La Function no responde al navegador: el frontend consulta el resultado en las APIs. Tras cinco fallos de procesamiento, se investiga la cola poison."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Variantes y recursos compartidos",
+      "items": [
+        "Dos portales y tres APIs en el ejemplo. Entra exige usuarios asignados; Requester consulta solo sus registros y Operator puede consultar el entorno.",
+        "Dev y Prod comparten los servicios del hub, pero cada uno tiene sus propias aplicaciones, identidades, Cosmos, storage y vaults. El diagrama es lógico; el tráfico privado está sujeto a NSG, UDR y firewall."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Zero Trust: verificar aunque la red sea privada",
+      "items": [
+        "Cada API de datos valida firma, emisor, audiencia, vigencia, tenant, cliente, scope y rol del JWT. Las consultas incorporan el propietario verificado; el cliente no decide tenant ni usuario.",
+        "La API tenant y Functions usan escritura; las APIs de consulta usan una conexión read-only desde AKV. MFA/Conditional Access y la aceptación real se revisan con los administradores del tenant."
+      ]
+    }
+  ]
+}

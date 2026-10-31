@@ -1,0 +1,36 @@
+# Goliat - Nexus · Agente GitHub Actions opcional.
+# Copia esta carpeta a .local/agent y este fichero a local.auto.tfvars.
+# Este stack crea una VM privada y una NIC; no añade permisos Azure a la identidad del agente.
+
+# Nombre propio de la máquina y del agente registrado en GitHub.
+name = "goliat-nexus-agent"
+
+# Suscripción y tenant que ya contienen la plataforma Nexus.
+subscription_id = "00000000-0000-0000-0000-000000000000"
+tenant_id = "00000000-0000-0000-0000-000000000000"
+
+# Región de la VNet existente. La NIC y la VM deben pertenecer a esa región.
+location = "westeurope"
+
+# Grupo de recursos existente para este ejecutor.
+resource_group_name = "tuinstalacion-shared-rg"
+
+# Subred privada con NSG, DNS y salida por Firewall. No se crea otra VNet ni una IP pública.
+subnet_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/tuinstalacion-connectivity-rg/providers/Microsoft.Network/virtualNetworks/tuinstalacion-shared-hub-vnet/subnets/management"
+
+# Clave SSH PUBLICA del operador. La clave privada nunca va en Terraform.
+ssh_public_key = "ssh-ed25519 SUSTITUYE_POR_TU_CLAVE_PUBLICA"
+
+# 2 vCPU y 8 GiB para construir Node/Next.js. Ajusta tras medir el trabajo.
+vm_size = "Standard_D2as_v5"
+
+# Repositorio privado de tu usuario u organización. Se usa al registrar el agente.
+github_repository = "tuusuario/turepositorio"
+
+# Etiqueta explícita que usarán los workflows en runs-on. No se añaden etiquetas genéricas.
+github_labels = ["goliat-nexus"]
+
+# Autenticación opcional por certificado SPN; null utiliza tu sesión Azure CLI.
+# Son IDs/rutas locales, nunca el contenido del certificado ni su contraseña.
+client_id = null
+client_certificate_path = null
