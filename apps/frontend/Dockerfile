@@ -5,6 +5,7 @@ COPY proxy-params.conf /etc/nginx/proxy-params.conf
 COPY default.conf.template /etc/nginx/templates/default.conf.template
 COPY --chmod=755 15-resolver.envsh /docker-entrypoint.d/15-resolver.envsh
 COPY index.html styles.css app.js /usr/share/nginx/html/
+COPY LICENSE NOTICE /usr/share/nginx/html/
 RUN chown -R nginx:nginx /etc/nginx/conf.d /etc/nginx/templates /usr/share/nginx/html
 USER nginx
 EXPOSE 8080

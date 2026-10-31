@@ -102,12 +102,14 @@ class PublicationTests(unittest.TestCase):
                 self.assertEqual(args[args.index('--build-remote') + 1], 'false')
                 with zipfile.ZipFile(args[args.index('--src') + 1]) as archive:
                     packages.append(set(archive.namelist()))
+                    for name in ('LICENSE', 'NOTICE'):
+                        self.assertEqual(archive.read(name), (Path(__file__).resolve().parents[1] / name).read_bytes())
                     self.assertEqual(archive.getinfo('node_modules/@azure/functions/index.js').external_attr >> 16 & 0o777, 0o644)
                     self.assertEqual(archive.getinfo('node_modules/@azure/functions/').external_attr >> 16 & 0o777, 0o755)
             return Mock(returncode=0, stdout='')
         publish_application_code(self.view, execute)
         self.assertEqual(len(packages), 1)
-        self.assertTrue({'host.json', 'domain.mjs', 'package-lock.json', 'node_modules/@azure/functions/index.js'} <= packages[0])
+        self.assertTrue({'host.json', 'domain.mjs', 'package-lock.json', 'node_modules/@azure/functions/index.js', 'LICENSE', 'NOTICE'} <= packages[0])
         private_address.assert_called_once()
 
     @patch('product.cli.execute')

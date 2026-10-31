@@ -113,6 +113,8 @@ def main():
     if DIST.exists():
         shutil.rmtree(DIST)
     DIST.mkdir()
+    for name in ('LICENSE', 'NOTICE', 'LICENSING.md'):
+        shutil.copy2(ROOT / name, DIST / name)
     for name in ("index.html", "styles.css", "app.js", "lab.js", "github.js", "diagram-viewer.js", "NOTICE.md", "_headers"):
         shutil.copy2(SITE / name, DIST / name)
     shutil.copytree(SITE / "assets", DIST / "assets")

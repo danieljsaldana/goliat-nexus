@@ -1,6 +1,7 @@
 .PHONY: check validate test fmt docs site site-check site-serve inventory images-check tfvars site-data
 
 check:
+	python3 scripts/sync_licenses.py --check
 	python3 scripts/site_metadata.py --check
 	python3 scripts/render_tfvars.py --check
 	python3 scripts/export_site_config.py --check

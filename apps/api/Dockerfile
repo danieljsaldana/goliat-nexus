@@ -4,6 +4,7 @@ ENV NODE_ENV=production PORT=8000
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund && npm cache clean --force
 COPY server.mjs domain.mjs auth.mjs ./
+COPY LICENSE NOTICE ./
 USER node
 EXPOSE 8000
 CMD ["node", "server.mjs"]
