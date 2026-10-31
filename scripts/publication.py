@@ -50,7 +50,7 @@ def public_files():
         if path.parts[0]=='site':
             if len(path.parts)>1 and path.parts[1] in GENERATED_SITE:
                 continue
-            if path.as_posix()=='site/SOURCES.json' or (path.parts[1]=='diagrams' and path.suffix=='.html'):
+            if path.as_posix() in {'site/SOURCES.json', 'site/LICENSE', 'site/NOTICE', 'site/LICENSING.md'} or (path.parts[1]=='diagrams' and path.suffix=='.html'):
                 continue
         if (ROOT/path).is_symlink():
             raise ValueError('Symlinks are not accepted in the publication source: '+path.as_posix())

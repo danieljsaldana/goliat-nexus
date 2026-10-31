@@ -93,6 +93,8 @@ def prepare_source_preview():
     shutil.copy2(DIST / "diagrams/resources.html", SITE / "diagrams/resources.html")
     (SITE / "SOURCES.json").unlink(missing_ok=True)
     shutil.copy2(DIST / "index.htm", SITE / "index.htm")
+    for name in ('LICENSE', 'NOTICE', 'LICENSING.md'):
+        shutil.copy2(DIST / name, SITE / name)
 
 
 def prepare_site_path_alias():
