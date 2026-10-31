@@ -45,7 +45,8 @@ def render_head(profile, *, site_url=None):
     data = {'@context': 'https://schema.org', '@type': 'SoftwareSourceCode', 'name': profile['name'],
         'description': profile['description'], 'codeRepository': profile['repository'], 'url': base,
         'image': image, 'version': profile['version'], 'programmingLanguage': ['HCL', 'Python', 'JavaScript'],
-        'author': {'@type': 'Person', **profile['author']}}
+        'author': {'@type': 'Person', **profile['author']},
+        'license': profile['repository'] + '/blob/main/LICENSE'}
     tags += ['<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace('<', '\\u003c') + '</script>', END]
     return '\n'.join(tags)
 

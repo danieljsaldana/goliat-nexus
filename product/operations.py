@@ -205,7 +205,7 @@ def publish_application_code(deployment, execute):
             archive = Path(folder) / "functions.zip"
             contents = Path(folder) / "contents"
             contents.mkdir()
-            for name in ("function_app.mjs", "handlers.mjs", "host.json", "package.json", "package-lock.json"):
+            for name in ("function_app.mjs", "handlers.mjs", "host.json", "package.json", "package-lock.json", "LICENSE", "NOTICE"):
                 shutil.copy2(ROOT / "apps/functions" / name, contents / name)
             shutil.copy2(ROOT / "apps/api/domain.mjs", contents / "domain.mjs")
             execute(["npm", "--prefix", str(contents), "ci", "--omit=dev"], capture=True)

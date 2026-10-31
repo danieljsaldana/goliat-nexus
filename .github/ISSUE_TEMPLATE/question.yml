@@ -1,0 +1,23 @@
+name: Usage question / Consulta de uso
+description: Ask about configuration, architecture or contributing.
+labels: [question, needs triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the [wiki](https://github.com/danieljsaldana/goliat-nexus/wiki) and [contribution guide](https://github.com/danieljsaldana/goliat-nexus/blob/main/CONTRIBUTING.md) first.
+        Puedes escribir en español. Do not share credentials, real tfvars, state, plans or private environment details.
+  - type: textarea
+    id: goal
+    attributes:
+      label: What are you trying to do? / ¿Qué quieres conseguir?
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried or read? / ¿Qué has probado o consultado?
+      description: Include a relevant guide, command or small fictional example.
+    validations:
+      required: true
+

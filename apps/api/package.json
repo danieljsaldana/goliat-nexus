@@ -16,5 +16,6 @@
     "@azure/eventgrid": "5.12.0",
     "mongodb": "7.8.0",
     "jose": "6.2.14"
-  }
+  },
+  "license": "PolyForm-Noncommercial-1.0.0"
 }

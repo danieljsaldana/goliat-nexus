@@ -1,0 +1,27 @@
+name: Feature request / Mejora
+description: Propose an improvement to the platform. Puedes escribir en español.
+labels: [enhancement, needs triage]
+body:
+  - type: markdown
+    attributes:
+      value: Describe your use case in English or Spanish, with fictional configuration and examples.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case / Problema o caso de uso
+      description: What are you trying to achieve, and what prevents it today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement / Mejora propuesta
+      description: Describe the behaviour you would like and who would benefit.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered / Alternativas
+      description: Include compatibility, cost or operational trade-offs if relevant. Never include real billing exports.
+

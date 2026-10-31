@@ -1,0 +1,59 @@
+name: Bug report / Error
+description: Report a reproducible problem with Nexus. Puedes escribir en español.
+labels: [bug, needs triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reports in English or Spanish are welcome. Use fictional examples and sanitised screenshots or errors.
+        For vulnerabilities, use [private reporting](https://github.com/danieljsaldana/goliat-nexus/security/advisories/new).
+        Never attach credentials, real tfvars, Terraform state, saved plans or customer data.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit / Versión o commit
+      placeholder: v1.0.0 or commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component / Componente
+      options:
+        - Terraform modules or stacks
+        - Deployment CLI and identities
+        - Network, WAF or private DNS
+        - Reference application (portals, APIs or Functions)
+        - Product website or diagrams
+        - CI or publication
+        - Other / Not sure
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Tool versions and environment / Herramientas y entorno
+      description: OS, Terraform, Python, Node.js and browser versions where relevant. Do not paste configuration files or Azure identifiers.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce / Pasos para reproducir
+      description: Include the smallest example that reproduces the problem, using fictional values.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour / Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour / Resultado observado
+      description: A short sanitised error or screenshot is enough. Review attachments before publishing.
+    validations:
+      required: true
+

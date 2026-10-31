@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability privately / Vulnerabilidad
+    url: https://github.com/danieljsaldana/goliat-nexus/security/advisories/new
+    about: Use private reporting for security vulnerabilities, not public issues.
+  - name: Documentation / Documentación
+    url: https://github.com/danieljsaldana/goliat-nexus/wiki
+    about: Configuration, architecture, operations and troubleshooting in English and Spanish.
+

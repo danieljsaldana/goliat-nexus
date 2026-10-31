@@ -100,13 +100,21 @@ La web bilingüe incluye vistas interactivas de arquitectura, recorridos animado
 
 Los README y las [páginas de wiki](docs/wiki/Home.md) están disponibles en español e inglés. Las guías operativas y las etiquetas de los diagramas se muestran actualmente en español.
 
+## Colaborar
+
+Utiliza los [formularios de issues](https://github.com/danieljsaldana/goliat-nexus/issues/new/choose) para comunicar errores, proponer mejoras, corregir documentación o consultar dudas de uso. Sigue [Cómo contribuir](CONTRIBUTING.es.md) / [Contributing](CONTRIBUTING.md) para enviar cambios desde un fork mediante una PR con comprobaciones automáticas. Puedes participar en español o inglés.
+
+## Licencia
+
+Nexus utiliza [PolyForm Noncommercial 1.0.0](LICENSE): permite usar, modificar y compartir el código para fines no comerciales según sus condiciones. Esta licencia no concede uso comercial. Consulta [el alcance y los avisos de terceros](LICENSING.md).
+
 ## Pipelines
 
-Consulta [CI, seguridad, releases en borrador y publicación manual de Pages](docs/CI_CD.md). Las acciones están fijadas por SHA, los permisos son mínimos, Terraform utiliza proveedores simulados y los artefactos se auditan. Preparar estos archivos no sube código.
+Consulta [CI, seguridad, releases en borrador y publicación manual de Pages](docs/CI_CD.md). Las acciones están fijadas por SHA, los permisos son mínimos, Terraform utiliza proveedores simulados y los artefactos se auditan. Las PRs validan los cambios sin desplegar Azure.
 
-## Preparar GitHub sin subir código
+## Controles de publicación
 
-Consulta [compilación y metadatos de la web](site/README.es.md) y [controles de publicación](docs/CI_CD.md). `make publication-check` revisa fuentes e historial; `make prepare-github` genera una copia local de fuentes públicas con un historial Git nuevo, sin commit ni push. Los archivos locales, credenciales y estados quedan fuera del checkout público y de la web. La URL prevista de GitHub Pages es configurable y no activa el hosting automáticamente.
+Consulta [compilación y metadatos de la web](site/README.es.md) y [controles de publicación](docs/CI_CD.md). `make publication-check` revisa fuentes e historial; `make prepare-github` permite preparar una copia independiente de fuentes públicas sin commit ni push. Los archivos locales, credenciales y estados quedan fuera del checkout público y de la web. La [web del producto](https://danieljsaldana.github.io/goliat-nexus/) se publica mediante el workflow manual de Pages.
 
 ## Apoya el proyecto
 

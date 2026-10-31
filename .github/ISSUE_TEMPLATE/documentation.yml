@@ -1,0 +1,26 @@
+name: Documentation / Documentación
+description: Improve a guide, example, translation or diagram.
+labels: [documentation, needs triage]
+body:
+  - type: markdown
+    attributes:
+      value: Reports and suggested corrections in English or Spanish are welcome.
+  - type: input
+    id: page
+    attributes:
+      label: Page or file / Página o archivo
+      description: Link to the guide, website section, diagram or configuration example.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is missing or unclear? / ¿Qué falta o no se entiende?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested correction / Corrección propuesta
+      description: A suggestion is helpful, but you do not need to know the answer to report a problem.
+

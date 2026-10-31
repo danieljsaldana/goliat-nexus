@@ -71,6 +71,9 @@ test-results/
 playwright-report/
 
 /site/index.htm
+/site/LICENSE
+/site/NOTICE
+/site/LICENSING.md
 
 *.log
 *.har

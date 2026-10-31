@@ -4,7 +4,7 @@
   "private": true,
   "description": "Brand asset tooling for the Goliat Nexus Azure application platform.",
   "author": {
-    "name": "Daniel J. Salda\u00f1a",
+    "name": "Daniel J. Saldaña",
     "url": "https://danieljsaldana.dev/"
   },
   "repository": {
@@ -22,5 +22,6 @@
   "type": "module",
   "engines": {
     "node": ">=24"
-  }
+  },
+  "license": "PolyForm-Noncommercial-1.0.0"
 }

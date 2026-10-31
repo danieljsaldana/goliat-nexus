@@ -14,7 +14,7 @@ Workflows validate source, dependencies and the website. Local review commands n
 
 Actions use full commit SHAs verified in their official repositories. Gitleaks and actionlint downloads use fixed versions and versioned SHA-256 values in `scripts/security-tools.json`. CI runs on GitHub-hosted runners with read-only repository access, timeouts and a final `CI passed` gate covering every job/matrix. Pull requests never run on the private Azure agent. No `pull_request_target`, Azure sessions, SPNs, PATs or cloud secrets are required.
 
-Only CodeQL writes security results; only the draft-release job has repository write permission. Only Pages deployment has Pages and OIDC write permissions. Before enabling publishing, protect main, require `CI passed` and CodeQL checks, configure the `release` environment for review, and configure Pages to use GitHub Actions with an appropriate `github-pages` environment. Workflows do not automatically apply these repository settings.
+Only CodeQL writes security results; only the draft-release job has repository write permission. Only Pages deployment has Pages and OIDC write permissions. The upstream repository protects `main` with PRs, `CI passed`, the three CodeQL jobs, dependency review and resolved conversations. External workflow runs require maintainer approval. See [Contributing](https://github.com/danieljsaldana/goliat-nexus/blob/main/CONTRIBUTING.md). Fork owners must configure these settings themselves; workflows do not apply them automatically. Configure `release` and `github-pages` environments for your team and select GitHub Actions in Settings → Pages.
 
 ## Publication boundary
 
