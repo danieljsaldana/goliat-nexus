@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_TFVARS = {'examples/shared.auto.tfvars.json', *[f'{folder}/{name}.tfvars' for folder in ('environments','examples/demo') for name in ('common','dev','prod')]}
 PUBLIC_TEMPLATES = {'examples/agent/local.auto.tfvars.example'}
-PUBLIC_ROOTS = {'.github','.githooks','.gitignore','Makefile','README.md','README.es.md','SECURITY.md','LICENSE','NOTICE','CONTRIBUTING.md','VERSION','lz',
+PUBLIC_ROOTS = {'.github','.githooks','.gitignore','Makefile','README.md','README.es.md','SECURITY.md','LICENSE','NOTICE','LICENSING.md','CONTRIBUTING.md','CONTRIBUTING.es.md','CODE_OF_CONDUCT.md','VERSION','lz',
     'modules','product','stacks','terraform','environments','examples','tests','scripts','docs','site','apps','package.json','package-lock.json'}
 PRIVATE_PARTS = {'.git','.local','.lz','.openai','.sites-runtime','.terraform','node_modules','__pycache__','.next','out','dist','.generated','.azure','.aws','.ssh','coverage','test-results','playwright-report','.venv','venv','.pytest_cache','.mypy_cache','.terraform.d'}
 GENERATED_SITE = {'docs','examples','environments','downloads','licenses','.generated'}

@@ -103,13 +103,21 @@ make site-serve
 
 The bilingual website includes interactive architecture views, an animated request walkthrough, links to commented configuration source and technical documentation. See [site/README.md](site/README.md) for build and preview details. Generate it with `make site` before opening `/site/index.html` or `/site/index.htm` through a local HTTP server; diagram HTML files are build outputs.
 
+## Contributing
+
+Use the [issue forms](https://github.com/danieljsaldana/goliat-nexus/issues/new/choose) to report bugs, propose features, improve documentation or ask a usage question. Follow [Contributing](CONTRIBUTING.md) / [Cómo contribuir](CONTRIBUTING.es.md) to send changes from a fork through a checked pull request. English and Spanish are welcome.
+
+## Licence
+
+Nexus uses [PolyForm Noncommercial 1.0.0](LICENSE): noncommercial use, modification and sharing under its terms. Commercial use is not granted by this licence. See [licensing scope and third-party notices](LICENSING.md).
+
 ## Pipelines
 
-See [CI, security, draft releases and manual Pages publishing](docs/CI_CD.en.md). Workflows use pinned actions, minimal permissions, mock Terraform providers and audited artifacts. No code is uploaded by preparing these files.
+See [CI, security, draft releases and manual Pages publishing](docs/CI_CD.en.md). Workflows use pinned actions, minimal permissions, mock Terraform providers and audited artifacts. Pull requests validate changes without deploying Azure.
 
-## Prepare GitHub without uploading code
+## Publication safeguards
 
-Read the [website build and metadata guide](site/README.md) and [publication controls](docs/CI_CD.en.md). `make publication-check` scans source candidates and Git history; `make prepare-github` produces a local source checkout with fresh Git history, without committing or pushing. Local configuration, credentials and states are excluded from the public checkout and website. The planned GitHub Pages URL is configurable and does not automatically activate hosting.
+Read the [website build and metadata guide](site/README.md) and [publication controls](docs/CI_CD.en.md). `make publication-check` scans source candidates and Git history; `make prepare-github` can produce a separate public-source checkout without committing or pushing. Local configuration, credentials and states are excluded from the public checkout and website. The [product website](https://danieljsaldana.github.io/goliat-nexus/) is published through the manual Pages workflow.
 
 ## Support the project
 
