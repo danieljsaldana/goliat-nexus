@@ -58,7 +58,7 @@ Para cambios web, ejecuta `make site-serve` y revisa tamaños de escritorio y m�
 
 Explica el problema, el nuevo comportamiento y las pruebas realizadas. Enlaza la issue, añade capturas sin datos sensibles cuando ayuden y detalla los recursos, compatibilidad, costes o migraciones de datos que afecte un cambio de infraestructura. Una corrección pequeña de documentación no necesita una issue previa.
 
-Las PRs se ejecutan en runners Ubuntu de GitHub con permisos de lectura y sin secretos Azure. Un mantenedor debe aprobar la ejecución de workflows de colaboradores externos; es normal que queden esperando. Las PRs no publican Pages, crean releases ni despliegan Azure. Los workflows no ejecutan código de colaboradores mediante `pull_request_target`.
+Las PRs se ejecutan en runners Ubuntu de GitHub con acceso de lectura a las fuentes y sin secretos Azure. Solo CodeQL recibe permiso para publicar los resultados de seguridad. Un mantenedor debe aprobar la ejecución de workflows de colaboradores externos; es normal que queden esperando. Las PRs no publican Pages, crean releases ni despliegan Azure. Los workflows no ejecutan código de colaboradores mediante `pull_request_target`.
 
 `main` exige una PR, comprobaciones actualizadas, **CI passed**, los tres jobs de CodeQL, la revisión de dependencias y conversaciones de revisión resueltas. Los nuevos commits repiten los controles. La fusión automática está desactivada; un mantenedor decide cuándo fusionar. La configuración para un único mantenedor exige cero votos formales de aprobación, igual que Inventory, para permitirle fusionar sus propias PRs verificadas. Esto no concede permisos de fusión a colaboradores externos. Aumenta ese número cuando exista otro mantenedor independiente.
 

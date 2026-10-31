@@ -58,7 +58,7 @@ For website changes, run `make site-serve` and inspect desktop and mobile widths
 
 Describe the problem, the new behaviour and how you validated it. Link the issue, include sanitised UI screenshots when useful, and explain resource, compatibility, cost or data migration implications for infrastructure changes. Small documentation fixes do not need a separate issue.
 
-PRs run on GitHub-hosted Ubuntu runners with read-only permissions and no Azure secrets. A maintainer must approve workflow execution for external contributors; waiting for approval is normal. PRs do not publish Pages, create a release or deploy Azure. Workflows never use `pull_request_target` to execute a contributor's code.
+PRs run on GitHub-hosted Ubuntu runners with read-only source access and no Azure secrets. Only CodeQL receives permission to publish security analysis results. A maintainer must approve workflow execution for external contributors; waiting for approval is normal. PRs do not publish Pages, create a release or deploy Azure. Workflows never use `pull_request_target` to execute a contributor's code.
 
 `main` requires a PR, up-to-date checks, **CI passed**, the three CodeQL jobs, dependency review and resolved review conversations. New pushes repeat the checks. Automatic merging is disabled; a maintainer chooses when to merge. The single-maintainer configuration requires zero formal approval votes, matching Inventory, so the maintainer can merge their own checked PRs. It does not give external contributors merge permission. Raise that approval count when there is another independent maintainer.
 
