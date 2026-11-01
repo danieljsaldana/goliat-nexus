@@ -60,5 +60,5 @@ jobs:
           gh release create "$tag" \
             .local/release/SOURCE_SHA256SUMS \
             .local/release/provenance.json \
-            --target "$GITHUB_SHA" --title "Goliat Nexus $RELEASE_VERSION" \
+            --target "$GITHUB_SHA" --title "$tag" \
             --draft --notes-file .local/release/release-notes.md
