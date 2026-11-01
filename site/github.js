@@ -53,6 +53,11 @@ export async function getStarSnapshot(repository,{fetcher=globalThis.fetch,stora
  const name=repositoryName(repository);
  if(!name)return null;
  const key='goliat:github-stars-snapshot:'+name;
+ const state={known:readStarSnapshot(repository,fallback,{now})};
+ const prefer=snapshot=>{
+  if(snapshot&&(!state.known||Date.parse(snapshot.checkedAt)>Date.parse(state.known.checkedAt)))state.known=snapshot;
+  return state.known;
+ };
  const remember=snapshot=>{
   if(snapshot)try{storage?.setItem(key,JSON.stringify({at:now(),snapshot:{repository,count:snapshot.count,checked_at:snapshot.checkedAt}}));}catch{ /* Optional cache or network metadata may be unavailable. */ }
   return snapshot;
@@ -60,9 +65,11 @@ export async function getStarSnapshot(repository,{fetcher=globalThis.fetch,stora
  try{
   const cached=JSON.parse(storage?.getItem(key)??'null');
   const value=readStarSnapshot(repository,cached?.snapshot,{now});
-  if(value&&Number.isFinite(cached.at)&&cached.at<=now()&&now()-cached.at<900000)return value;
+  if(value&&Number.isFinite(cached.at)&&cached.at>=0&&cached.at<=now()){
+   prefer(value);
+   if(now()-cached.at<900000)return state.known;
+  }
  }catch{ /* Optional cache or network metadata may be unavailable. */ }
- const state={known:readStarSnapshot(repository,fallback,{now})};
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
  try{
   const response=await fetcher(`https://raw.githubusercontent.com/${name}/github-stats/stars.json`,{
@@ -71,11 +78,11 @@ export async function getStarSnapshot(repository,{fetcher=globalThis.fetch,stora
   if(response.ok){
    const daily=readStarSnapshot(repository,await response.json(),{now});
    if(daily){
-    if(now()-Date.parse(daily.checkedAt)<172800000)return remember(daily);
-    if(!state.known||Date.parse(daily.checkedAt)>Date.parse(state.known.checkedAt))state.known=daily;
+    prefer(daily);
+    if(now()-Date.parse(daily.checkedAt)<172800000)return remember(state.known);
    }
   }
  }catch{ /* Optional cache or network metadata may be unavailable. */ }finally{clearTimeout(timer);}
  const live=await apiSnapshot(repository,{fetcher,storage,now,timeoutMs});
- return remember(live??state.known);
+ return remember(prefer(live));
 }
