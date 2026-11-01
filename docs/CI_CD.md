@@ -20,7 +20,7 @@ Las acciones están fijadas a SHA completos verificados en sus repositorios ofic
 
 CI usa runners hospedados por GitHub y `contents: read`. El checkout no conserva credenciales. Los jobs tienen límites de tiempo y el estado final `CI passed` exige que todos terminen correctamente, incluidas las matrices. Ninguna PR ejecuta código en el agente privado Azure.
 
-Solo CodeQL escribe resultados de seguridad. Solo el job que crea el borrador tiene `contents: write`. Pages limita `pages: write` e `id-token: write` al job de publicación. No se usa `pull_request_target`, sesiones Azure, SPN, PAT ni secretos cloud en CI.
+Solo CodeQL escribe resultados de seguridad. El job que crea el borrador y el publicador diario de estrellas tienen `contents: write`. Pages limita `pages: write` e `id-token: write` al job de publicación. No se usa `pull_request_target`, sesiones Azure, SPN, PAT ni secretos cloud en CI.
 
 El repositorio principal protege `main` mediante PR, `CI passed`, los tres análisis CodeQL, la revisión de dependencias y conversaciones resueltas. Las ejecuciones externas requieren aprobación del mantenedor. Consulta [Cómo contribuir](https://github.com/danieljsaldana/goliat-nexus/blob/main/CONTRIBUTING.es.md). En un fork, el propietario debe configurar estos ajustes: los YAML no los aplican automáticamente. Configura también los entornos `release` y `github-pages` según tu equipo y selecciona GitHub Actions en Settings → Pages.
 
@@ -56,3 +56,6 @@ Publicar la web en Pages es una acción manual distinta. No crea recursos Azure 
 El despliegue Azure conserva el CLI y el ejecutor privado. No se añade un despliegue automático desde PR. El publicador OIDC opcional actual tiene permisos limitados de imágenes, grupo e identidad; por sí solo no aporta todos los permisos de estado, secretos, asignaciones RBAC y directorio necesarios para ejecutar la plataforma completa en CI. Preparar CD Azure requiere revisar esos ámbitos, la conectividad/DNS privados y las aprobaciones de cada entorno. No reutilices credenciales personales ni introduzcas tfvars reales en GitHub.
 
 Los logs y artefactos de Actions serán públicos al ejecutarse en este repositorio público. Los comandos incluidos evitan imprimir secretos y solo utilizan valores ficticios en validación. Un escaneo automático no garantiza ausencia total de datos sensibles.
+
+
+El job diario de estrellas solo actualiza `stars.json` en la rama de datos `github-stats`. No compila la web ni las aplicaciones, no cambia `main` ni despliega Pages. Consulta los [metadatos de la web](https://github.com/danieljsaldana/goliat-nexus/blob/main/site/README.es.md#estrellas-de-github).

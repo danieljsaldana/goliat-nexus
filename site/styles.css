@@ -655,3 +655,33 @@ footer p,footer a{font-size:11px;color:var(--muted)}
 .icon{display:inline-block;vertical-align:middle;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .header-github .github-stars{gap:4px;margin-left:1px;padding-left:7px;font-size:11px;line-height:1}.header-github .github-stars svg{width:13px;height:13px}
 @media(max-width:430px){.header-github{width:auto;gap:6px;padding:7px 8px}.header-github>span:not([data-github-stars]){display:none}.header-github>[data-github-stars]{display:inline-flex;gap:3px;padding-left:6px;font-size:10px}.header-github .github-stars svg{width:12px;height:12px}}
+
+/* Keep repository controls aligned, including the narrowest mobile header. */
+.header-github { min-height: 34px; line-height: 1; padding: 5px 9px; }
+.header-github .github-stars { gap: 4px; padding-left: 7px; font-size: 11px; }
+.github-stars svg { color: #93600f; }
+[data-github-count] { min-width: 1ch; }
+@media (max-width: 1120px) {
+  .header { padding-block: 10px; row-gap: 10px; }
+  .header .brand small { display: none; }
+  .header nav a { min-height: 38px; }
+}
+@media (max-width: 760px) {
+  .header .brand img { width: 28px; height: 28px; }
+  .hero .eyebrow { font-size: 10px; letter-spacing: 1px; line-height: 1.6; }
+}
+@media (max-width: 380px) {
+  .header { column-gap: 8px; }
+  .header .brand { gap: 8px; font-size: 13px; }
+  .header .brand img { width: 26px; height: 26px; }
+  .header-actions { gap: 7px; }
+  .language button { width: 27px; font-size: 11px; }
+}
+
+@media (max-width: 380px) {
+  .header { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+  .header nav { grid-column: 1 / -1; }
+  .header .brand { min-width: 0; }
+  .header .brand > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .header .brand img { flex-shrink: 0; }
+}

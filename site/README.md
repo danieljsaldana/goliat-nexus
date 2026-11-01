@@ -85,3 +85,10 @@ See the official [repository API](https://docs.github.com/en/rest/repos/repos#ge
 `assets/social-card.png` is the 1200 × 630 website preview; `assets/github-preview.png` is the 1280 × 640 image for the repository's Social preview settings. Their SVG sources and favicon assets remain versioned. Regenerate PNGs with `npm ci --ignore-scripts` and `npm run brand`; GitHub Social preview is configured separately.
 
 The default deployment URL is set in the public profile. Override it for another host with `GOLIAT_SITE_URL=https://example.com/nexus/ make site`. This changes canonical and image URLs without publishing or changing the code repository link. Publish `dist/`, which includes `.nojekyll` and relative paths supporting a repository subdirectory.
+
+
+## GitHub stars
+
+The website reads public `stars.json` from the data-only `github-stats` branch. `.github/workflows/stars.yml` refreshes it daily at 06:17 UTC and supports a manual run. This job runs only the metadata publisher and its tests: no application or Terraform build, Pages deployment, PAT or Azure credential is needed. Its short-lived `GITHUB_TOKEN` can write repository contents; the script only updates the dedicated branch and never force-pushes. `main` retains its PR checks.
+
+The browser uses a 15-minute cache. It can fall back to the public GitHub API and the dated snapshot included with the website if the scheduled data is unavailable or older than 48 hours. Zero is a valid count; a failed request never becomes an invented zero. The tooltip shows when the displayed value was checked. GitHub can delay or disable scheduled workflows; use **Actions → Refresh public GitHub stars → Run workflow** to retry. Forks must update the website's repository URL and enable their own scheduled workflow. No token is shipped to the browser.
