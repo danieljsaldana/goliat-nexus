@@ -99,4 +99,11 @@ test('expired cache survives failed refreshes and never replaces a newer dated v
  assert.equal(state.calls,4);
  const newer={repository,count:6,checked_at:new Date(state.at).toISOString()};
  assert.deepEqual(await getStarSnapshot(repository,{storage,now:()=>state.at,fetcher:offline,fallback:newer}),{count:6,checkedAt:newer.checked_at});
+ const cachedAt=state.at;
+ state.at+=1000;
+ assert.deepEqual(await getStarSnapshot(repository,{storage,now:()=>state.at,fetcher:offline}),{count:6,checkedAt:newer.checked_at});
+ assert.equal(JSON.parse(storage.getItem('goliat:github-stars-snapshot:example/nexus')).at,cachedAt);
+ state.at=cachedAt+900001;
+ assert.deepEqual(await getStarSnapshot(repository,{storage,now:()=>state.at,fetcher:offline}),{count:6,checkedAt:newer.checked_at});
+ assert.equal(state.calls,6);
 });

@@ -58,8 +58,8 @@ export async function getStarSnapshot(repository,{fetcher=globalThis.fetch,stora
   if(snapshot&&(!state.known||Date.parse(snapshot.checkedAt)>Date.parse(state.known.checkedAt)))state.known=snapshot;
   return state.known;
  };
- const remember=snapshot=>{
-  if(snapshot)try{storage?.setItem(key,JSON.stringify({at:now(),snapshot:{repository,count:snapshot.count,checked_at:snapshot.checkedAt}}));}catch{ /* Optional cache or network metadata may be unavailable. */ }
+ const remember=(snapshot,at=now())=>{
+  if(snapshot)try{storage?.setItem(key,JSON.stringify({at,snapshot:{repository,count:snapshot.count,checked_at:snapshot.checkedAt}}));}catch{ /* Optional cache or network metadata may be unavailable. */ }
   return snapshot;
  };
  try{
@@ -67,7 +67,7 @@ export async function getStarSnapshot(repository,{fetcher=globalThis.fetch,stora
   const value=readStarSnapshot(repository,cached?.snapshot,{now});
   if(value&&Number.isFinite(cached.at)&&cached.at>=0&&cached.at<=now()){
    prefer(value);
-   if(now()-cached.at<900000)return state.known;
+   if(now()-cached.at<900000)return remember(state.known,cached.at);
   }
  }catch{ /* Optional cache or network metadata may be unavailable. */ }
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
