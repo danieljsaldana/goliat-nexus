@@ -685,3 +685,10 @@ footer p,footer a{font-size:11px;color:var(--muted)}
   .header .brand > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .header .brand img { flex-shrink: 0; }
 }
+
+/* Funding stays compact in the header and available in the footer on every screen. */
+.sponsor-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:5px 9px;border:1px solid #e3cbd8;border-radius:8px;background:#fff;color:#783450;font-size:12px;font-weight:600;line-height:1.2;white-space:nowrap;flex-shrink:0}
+.sponsor-button .icon{width:15px;height:15px;flex-shrink:0;color:#aa3f75}
+.sponsor-button:hover{background:#fff3f8;border-color:#c08ba7}
+.footer-links .sponsor-button:hover{text-decoration:none}
+@media(max-width:760px){.header-actions .sponsor-button{display:none}}
