@@ -56,6 +56,8 @@ La versión manual debe coincidir con `VERSION`. La pipeline repite CI, escanea 
 
 Publicar la web en Pages es una acción manual distinta. No crea recursos Azure ni despliega Alba.
 
+Los entornos de GitHub separan ambas operaciones. `github-pages` registra el despliegue de la web y su URL. `release` usa `deployment: false`: permite aplicar restricciones de rama, secretos y revisores sin registrar la preparación de un borrador como despliegue. Configura ambos entornos para admitir únicamente la rama `main`; los revisores son opcionales según tu equipo. No añadas reglas de protección mediante GitHub Apps al entorno `release`, porque requieren un objeto de despliegue. Las versiones publicadas se consultan en **Releases** y la web en **Deployments**. El contador de despliegues refleja el historial de cada repositorio, no su número de releases.
+
 El despliegue Azure conserva el CLI y el ejecutor privado. No se añade un despliegue automático desde PR. El publicador OIDC opcional actual tiene permisos limitados de imágenes, grupo e identidad; por sí solo no aporta todos los permisos de estado, secretos, asignaciones RBAC y directorio necesarios para ejecutar la plataforma completa en CI. Preparar CD Azure requiere revisar esos ámbitos, la conectividad/DNS privados y las aprobaciones de cada entorno. No reutilices credenciales personales ni introduzcas tfvars reales en GitHub.
 
 Los logs y artefactos de Actions serán públicos al ejecutarse en este repositorio público. Los comandos incluidos evitan imprimir secretos y solo utilizan valores ficticios en validación. Un escaneo automático no garantiza ausencia total de datos sensibles.

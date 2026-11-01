@@ -40,6 +40,8 @@ Terraform uses mock providers without Azure login. Providers are downloaded from
 
 The manual release version must match `VERSION`. A release reruns CI, rescans the full checkout and requires clean source. It creates per-file SOURCE_SHA256SUMS, commit provenance and draft notes without packaging code or tfvars. Existing releases are preserved. The owner reviews notes, hashes and evidence before publishing. Pages is a separate manual action; it neither provisions Azure nor deploys Alba.
 
+GitHub environments separate these operations. `github-pages` records the website deployment and its URL. `release` uses `deployment: false`: branch restrictions, secrets and required reviewers can apply without recording draft preparation as a deployment. Restrict both environments to the `main` branch; configure reviewers for your team if needed. Do not add GitHub App deployment protection rules to `release`, because those require a deployment object. Published versions belong under **Releases**, and website deployments under **Deployments**. Deployment counts reflect each repository's history, not its release count.
+
 Azure deployment keeps using the CLI and a private executor. The optional OIDC publisher's limited image/group/identity roles do not provide all state, secret, RBAC-assignment and directory permissions needed for a full platform deployment. Azure CD needs a deliberate permissions, private connectivity/DNS and environment-approval design. Never put personal credentials or real tfvars in the public repository.
 
 Actions logs and artifacts are public when executed in this public repository. Validation uses fictional values and avoids printing secret material. Automated scanning cannot guarantee the absence of every sensitive value.
