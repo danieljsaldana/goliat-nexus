@@ -92,3 +92,9 @@ The default deployment URL is set in the public profile. Override it for another
 The website reads public `stars.json` from the data-only `github-stats` branch. `.github/workflows/stars.yml` refreshes it daily at 06:17 UTC and supports a manual run. This job runs only the metadata publisher and its tests: no application or Terraform build, Pages deployment, PAT or Azure credential is needed. Its short-lived `GITHUB_TOKEN` can write repository contents; the script only updates the dedicated branch and never force-pushes. `main` retains its PR checks.
 
 The browser uses a 15-minute cache. It can fall back to the public GitHub API and the dated snapshot included with the website if the scheduled data is unavailable or older than 48 hours. Zero is a valid count; a failed request never becomes an invented zero. The tooltip shows when the displayed value was checked. GitHub can delay or disable scheduled workflows; use **Actions → Refresh public GitHub stars → Run workflow** to retry. Forks must update the website's repository URL and enable their own scheduled workflow. No token is shipped to the browser.
+
+### Why keep the github-stats branch?
+
+It stores the public counter data, not the website deployment. The scheduled workflow runs from `main`, queries the repository and updates only `stars.json`; the published website reads that JSON directly. A daily Pages build is not required to update the counter. Keep the branch for this mechanism: deleting it without changing the workflow causes the next refresh to recreate it.
+
+A daily website build is another possible design: fetch the count during the build, include it in the deployed files and publish Pages each day. That can remove the data branch, but changes both the publisher and frontend and creates a full website deployment for each counter refresh. Nexus currently uses the independent data update described above.

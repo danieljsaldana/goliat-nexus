@@ -13,12 +13,15 @@ Las pipelines validan el código, las dependencias y la web. Los comandos de rev
 | `.github/dependabot.yml` | Semanal | Propuestas de actualización para Actions, cinco paquetes npm y proveedores Terraform. |
 | `.github/workflows/release.yml` | Manual, solo main | Repite CI y prepara una release **en borrador**, con hashes de las fuentes y procedencia del commit, sin ZIP. |
 | `.github/workflows/pages.yml` | Manual, solo main | Genera, audita y publica `dist/` en GitHub Pages. |
+| `.github/workflows/stars.yml` | Diario y manual, solo main | Actualiza `stars.json` en la rama de datos `github-stats`, sin compilar la web ni desplegar Pages. |
 
 Las acciones están fijadas a SHA completos verificados en sus repositorios oficiales. Dependabot mantiene propuestas de actualización; revísalas antes de fusionar. Los binarios Gitleaks/actionlint tienen versiones y SHA-256 fijados en `scripts/security-tools.json`. No se descarga ni ejecuta una versión `latest` durante las comprobaciones.
 
 ## Permisos y ejecución
 
 CI usa runners hospedados por GitHub y `contents: read`. El checkout no conserva credenciales. Los jobs tienen límites de tiempo y el estado final `CI passed` exige que todos terminen correctamente, incluidas las matrices. Ninguna PR ejecuta código en el agente privado Azure.
+
+Los jobs hospedados por GitHub usan explícitamente `ubuntu-24.04`. Así el sistema operativo no cambia automáticamente cuando GitHub mueve el alias `ubuntu-latest`. La imagen sigue recibiendo actualizaciones dentro de Ubuntu 24.04; los saltos a otra versión deben validarse de forma explícita.
 
 Solo CodeQL escribe resultados de seguridad. El job que crea el borrador y el publicador diario de estrellas tienen `contents: write`. Pages limita `pages: write` e `id-token: write` al job de publicación. No se usa `pull_request_target`, sesiones Azure, SPN, PAT ni secretos cloud en CI.
 
