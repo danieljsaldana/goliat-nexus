@@ -1,5 +1,5 @@
 import {createDiagramViewer} from './diagram-viewer.js';
-import {getPublicStars,readStarSnapshot} from './github.js';
+import {getStarSnapshot,readStarSnapshot,formatStarCount} from './github.js';
 import {architectureViews} from './content/architecture-explorer.js';
 import {deploymentCommands,deploymentDetails} from './content/deployment-model.mjs';
 import {resourceInventory} from './content/resources.js';
@@ -142,10 +142,11 @@ function renderGitHubStars(){
   badge.hidden=githubStars===null;
   if(githubStars===null)return;
   const count=new Intl.NumberFormat(language).format(githubStars);
-  badge.querySelector('[data-github-count]').textContent=count;
+  badge.querySelector('[data-github-count]').textContent=formatStarCount(githubStars,language);
   badge.setAttribute('aria-label',count+(language==='es'?' estrellas en GitHub':' stars on GitHub'));
-  const checked=githubStarsCheckedAt?new Intl.DateTimeFormat(language,{dateStyle:'medium'}).format(new Date(githubStarsCheckedAt)):null;
+  const checked=githubStarsCheckedAt?new Intl.DateTimeFormat(language,{dateStyle:'medium',timeStyle:'short'}).format(new Date(githubStarsCheckedAt)):null;
   badge.title=checked?(language==='es'?`Última comprobación en GitHub: ${checked}`:`Last checked on GitHub: ${checked}`):(language==='es'?'Estrellas consultadas en GitHub':'Star count retrieved from GitHub');
+  badge.closest('a').title=badge.title;
   if(badge.closest('.header-github'))badge.closest('a').setAttribute('aria-label','GitHub · '+count+(language==='es'?' estrellas':' stars'));
  });
 }
@@ -304,14 +305,16 @@ let publicMetadataStorage=null;
 try{publicMetadataStorage=sessionStorage;}catch{}
 async function loadGitHubStars(){
  const repository=document.querySelector('[data-repository]').href;
+ let fallback=null;
  try{
   const response=await fetch(new URL('./content/github-stars.json',import.meta.url),{cache:'no-store'});
   if(response.ok){
-   const snapshot=readStarSnapshot(repository,await response.json());
+   fallback=await response.json();
+   const snapshot=readStarSnapshot(repository,fallback);
    if(snapshot){githubStars=snapshot.count;githubStarsCheckedAt=snapshot.checkedAt;renderGitHubStars();}
   }
  }catch{ /* A missing snapshot must not prevent a public GitHub API request. */ }
- const count=await getPublicStars(repository,{storage:publicMetadataStorage});
- if(count!==null){githubStars=count;githubStarsCheckedAt=null;renderGitHubStars();}
+ const latest=await getStarSnapshot(repository,{storage:publicMetadataStorage,fallback});
+ if(latest){githubStars=latest.count;githubStarsCheckedAt=latest.checkedAt;renderGitHubStars();}
 }
 loadGitHubStars();

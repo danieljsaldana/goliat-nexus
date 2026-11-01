@@ -85,3 +85,10 @@ Comportamiento conforme a la [API de repositorios](https://docs.github.com/en/re
 `assets/social-card.png` es la portada web de 1200 × 630; `assets/github-preview.png` es la imagen de 1280 × 640 para Social preview del repositorio. Se conservan sus fuentes SVG y los favicons. Regenera los PNG con `npm ci --ignore-scripts` y `npm run brand`; la portada del repositorio se configura por separado en GitHub.
 
 La URL de publicación predeterminada está en el perfil público. Para otro hosting, usa `GOLIAT_SITE_URL=https://ejemplo.com/nexus/ make site`: cambia canonical e imágenes sin publicar ni modificar el enlace al código. Publica `dist/`, que incluye `.nojekyll` y rutas relativas compatibles con el subdirectorio del repositorio.
+
+
+## Estrellas de GitHub
+
+La web lee `stars.json` de la rama pública `github-stats`, que solo contiene ese dato. `.github/workflows/stars.yml` lo actualiza a diario a las 06:17 UTC y permite una ejecución manual. El job ejecuta el publicador de metadatos y sus tests: no compila aplicaciones ni Terraform, no despliega Pages y no necesita PAT ni credenciales Azure. Su `GITHUB_TOKEN` temporal puede escribir contenido; el script solo actualiza la rama de datos, sin forzar el historial. `main` conserva sus controles de PR.
+
+El navegador guarda una caché de 15 minutos. Si el dato diario no está disponible o supera las 48 horas, puede consultar la API pública de GitHub y conservar la copia fechada incluida en la web. Cero es un valor válido; un fallo nunca se convierte en un cero inventado. El tooltip indica cuándo se comprobó el valor mostrado. GitHub puede retrasar o desactivar las ejecuciones programadas; puedes reintentarlo en **Actions → Refresh public GitHub stars → Run workflow**. Los forks deben cambiar la URL del repositorio de la web y activar su propio workflow. El navegador no recibe ningún token.
