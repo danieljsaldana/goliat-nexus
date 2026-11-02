@@ -310,14 +310,18 @@ function applyGitHubStars(snapshot){
 }
 async function loadGitHubStars(){
  const repository=document.querySelector('[data-repository]').href;
- if(!publicStarFallback)try{
-  const response=await fetch(new URL('./content/github-stars.json',import.meta.url),{cache:'no-store'});
-  if(response.ok){
-   const fallback=await response.json();
-   const snapshot=readStarSnapshot(repository,fallback);
-   if(snapshot){publicStarFallback=fallback;applyGitHubStars(snapshot);}
-  }
- }catch{ /* A missing snapshot must not prevent a public GitHub API request. */ }
+ if(!publicStarFallback){
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),4000);
+  try{
+   const response=await fetch(new URL('./content/github-stars.json',import.meta.url),{cache:'no-store',signal:controller.signal});
+   if(response.ok){
+    const fallback=await response.json();
+    const snapshot=readStarSnapshot(repository,fallback);
+    if(snapshot){publicStarFallback=fallback;applyGitHubStars(snapshot);}
+   }
+  }catch{ /* A missing snapshot must not prevent a public GitHub API request. */ }
+  finally{clearTimeout(timer);}
+ }
  const latest=await getStarSnapshot(repository,{storage:publicMetadataStorage,fallback:publicStarFallback,refresh:true});
  applyGitHubStars(latest);
 }
