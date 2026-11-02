@@ -1,1 +1,1 @@
-Goliat Nexus 1.0.0 · [Home](https://github.com/danieljsaldana/goliat-nexus/wiki/Home) · [Daniel J. Saldaña](https://danieljsaldana.dev/) · Los portales son ejemplos / Portals are examples.
+Goliat Nexus · [Home](https://github.com/danieljsaldana/goliat-nexus/wiki/Home) · [Web / Website](https://danieljsaldana.github.io/goliat-nexus/) · [Daniel J. Saldaña](https://danieljsaldana.dev/) · [Licencia no comercial / Noncommercial licence](https://github.com/danieljsaldana/goliat-nexus/blob/main/LICENSING.md)
