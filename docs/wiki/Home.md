@@ -1,25 +1,43 @@
 # Goliat Nexus · Wiki
 
-**Español / English · Versión / Version 1.0.0**
+**Español / English**
 
-Una base modular para aplicaciones Azure con hub compartido y entornos Dev/Prod separados. **Los portales tenant y admin son interfaces de ejemplo de Alba**: se incluyen para desplegar y probar la arquitectura, y se sustituyen o adaptan al proyecto real.
+[Web / Website](https://danieljsaldana.github.io/goliat-nexus/) · [Repositorio / Repository](https://github.com/danieljsaldana/goliat-nexus) · [Versiones / Releases](https://github.com/danieljsaldana/goliat-nexus/releases)
 
-A modular Azure application foundation with a shared hub and separate Dev/Prod environments. **The tenant and admin portals are Alba example interfaces**, included to deploy and test the architecture before adapting it to your product.
+Una base modular para desplegar aplicaciones en Azure con Terraform. El hub comparte servicios de plataforma; Dev y Prod mantienen sus propias redes, aplicaciones, identidades y datos.
+
+A modular foundation for deploying Azure applications with Terraform. The hub shares platform services; Dev and Prod keep their own networks, applications, identities and data.
+
+> **Aplicación de ejemplo:** Alba incluye dos portales, APIs y procesamiento de eventos para desplegar y probar la arquitectura. Adapta sus interfaces y lógica a tu proyecto.
+>
+> **Example application:** Alba includes two portals, APIs and event processing to deploy and test the architecture. Adapt its interfaces and logic to your project.
+
+## Por dónde empezar / Start here
+
+1. **Entender la arquitectura / Understand the architecture** — [Español](https://github.com/danieljsaldana/goliat-nexus/wiki/Arquitectura) · [English](https://github.com/danieljsaldana/goliat-nexus/wiki/Architecture).
+2. **Preparar el primer despliegue / Prepare the first deployment** — [Español](https://github.com/danieljsaldana/goliat-nexus/wiki/Inicio-rapido) · [English](https://github.com/danieljsaldana/goliat-nexus/wiki/Quickstart).
+3. **Revisar producción / Review production readiness** — [Español](https://github.com/danieljsaldana/goliat-nexus/wiki/Produccion-y-problemas) · [English](https://github.com/danieljsaldana/goliat-nexus/wiki/Production-and-troubleshooting).
+
+## Guías / Guides
 
 | Español | English |
 | --- | --- |
 | [Arquitectura](https://github.com/danieljsaldana/goliat-nexus/wiki/Arquitectura) | [Architecture](https://github.com/danieljsaldana/goliat-nexus/wiki/Architecture) |
-| [Inicio rapido](https://github.com/danieljsaldana/goliat-nexus/wiki/Inicio-rapido) | [Quickstart](https://github.com/danieljsaldana/goliat-nexus/wiki/Quickstart) |
-| [Configuracion](https://github.com/danieljsaldana/goliat-nexus/wiki/Configuracion) | [Configuration](https://github.com/danieljsaldana/goliat-nexus/wiki/Configuration) |
-| [Aplicacion de ejemplo](https://github.com/danieljsaldana/goliat-nexus/wiki/Aplicacion-de-ejemplo) | [Example application](https://github.com/danieljsaldana/goliat-nexus/wiki/Example-application) |
+| [Inicio rápido](https://github.com/danieljsaldana/goliat-nexus/wiki/Inicio-rapido) | [Quickstart](https://github.com/danieljsaldana/goliat-nexus/wiki/Quickstart) |
+| [Configuración](https://github.com/danieljsaldana/goliat-nexus/wiki/Configuracion) | [Configuration](https://github.com/danieljsaldana/goliat-nexus/wiki/Configuration) |
+| [Aplicación de ejemplo](https://github.com/danieljsaldana/goliat-nexus/wiki/Aplicacion-de-ejemplo) | [Example application](https://github.com/danieljsaldana/goliat-nexus/wiki/Example-application) |
 | [Seguridad](https://github.com/danieljsaldana/goliat-nexus/wiki/Seguridad) | [Security](https://github.com/danieljsaldana/goliat-nexus/wiki/Security) |
-| [Operacion](https://github.com/danieljsaldana/goliat-nexus/wiki/Operacion) | [Operations](https://github.com/danieljsaldana/goliat-nexus/wiki/Operations) |
-| [Produccion y problemas](https://github.com/danieljsaldana/goliat-nexus/wiki/Produccion-y-problemas) | [Production and troubleshooting](https://github.com/danieljsaldana/goliat-nexus/wiki/Production-and-troubleshooting) |
+| [Operación](https://github.com/danieljsaldana/goliat-nexus/wiki/Operacion) | [Operations](https://github.com/danieljsaldana/goliat-nexus/wiki/Operations) |
+| [Producción y problemas](https://github.com/danieljsaldana/goliat-nexus/wiki/Produccion-y-problemas) | [Production and troubleshooting](https://github.com/danieljsaldana/goliat-nexus/wiki/Production-and-troubleshooting) |
 
-Empieza por la arquitectura, continúa con el primer despliegue y revisa seguridad y producción antes de usarla en un proyecto real. Los comandos usan marcadores; los datos reales permanecen en archivos locales protegidos.
+## Documentación y comunidad / Documentation and community
 
-Start with architecture, proceed to the quickstart, and review security and production readiness before real use. Commands use placeholders; real configuration stays in protected local files.
+[README en español](https://github.com/danieljsaldana/goliat-nexus/blob/main/README.es.md) · [English README](https://github.com/danieljsaldana/goliat-nexus/blob/main/README.md) · [Seguridad / Security](https://github.com/danieljsaldana/goliat-nexus/blob/main/SECURITY.md) · [Contribuir / Contribute](https://github.com/danieljsaldana/goliat-nexus/blob/main/CONTRIBUTING.md)
 
-[Repositorio / Repository](https://github.com/danieljsaldana/goliat-nexus) · [Autor / Author](https://danieljsaldana.dev/) · [GitHub Sponsors](https://github.com/sponsors/danieljsaldana)
+La wiki orienta el recorrido; los comandos y la referencia detallada se mantienen en el repositorio. Revisa la configuración y los permisos antes de conectar datos reales.
 
-Otra herramienta del mismo autor / Another tool by the same author: [Goliat Cloud Inventory](https://danieljsaldana.github.io/goliat-cloud-inventory/), para explorar inventario y costes de Azure / for Azure inventory and cost exploration.
+The wiki guides your reading; commands and detailed reference stay in the repository. Review configuration and permissions before connecting real data.
+
+[Autor / Author](https://danieljsaldana.dev/) · [GitHub Sponsors](https://github.com/sponsors/danieljsaldana)
+
+También del mismo autor / Also by the same author: [Goliat Cloud Inventory](https://danieljsaldana.github.io/goliat-cloud-inventory/).

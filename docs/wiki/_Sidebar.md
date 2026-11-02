@@ -1,14 +1,16 @@
-[**Goliat Nexus · Home**](https://github.com/danieljsaldana/goliat-nexus/wiki/Home)
+[**Goliat Nexus · Wiki**](https://github.com/danieljsaldana/goliat-nexus/wiki/Home)
+
+[Web / Website](https://danieljsaldana.github.io/goliat-nexus/) · [Versiones / Releases](https://github.com/danieljsaldana/goliat-nexus/releases)
 
 **Español**
 
 - [Arquitectura](https://github.com/danieljsaldana/goliat-nexus/wiki/Arquitectura)
-- [Inicio rapido](https://github.com/danieljsaldana/goliat-nexus/wiki/Inicio-rapido)
-- [Configuracion](https://github.com/danieljsaldana/goliat-nexus/wiki/Configuracion)
-- [Aplicacion de ejemplo](https://github.com/danieljsaldana/goliat-nexus/wiki/Aplicacion-de-ejemplo)
+- [Inicio rápido](https://github.com/danieljsaldana/goliat-nexus/wiki/Inicio-rapido)
+- [Configuración](https://github.com/danieljsaldana/goliat-nexus/wiki/Configuracion)
+- [Aplicación de ejemplo](https://github.com/danieljsaldana/goliat-nexus/wiki/Aplicacion-de-ejemplo)
 - [Seguridad](https://github.com/danieljsaldana/goliat-nexus/wiki/Seguridad)
-- [Operacion](https://github.com/danieljsaldana/goliat-nexus/wiki/Operacion)
-- [Produccion y problemas](https://github.com/danieljsaldana/goliat-nexus/wiki/Produccion-y-problemas)
+- [Operación](https://github.com/danieljsaldana/goliat-nexus/wiki/Operacion)
+- [Producción y problemas](https://github.com/danieljsaldana/goliat-nexus/wiki/Produccion-y-problemas)
 
 **English**
 
