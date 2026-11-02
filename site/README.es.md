@@ -66,11 +66,11 @@ Referencia visual: `goliat-cloud-inventory` en el commit `c456aa3d33169261e25750
 
 ## Enlace a GitHub y estrellas
 
-Los enlaces apuntan al repositorio definido en `content/project.json`. El contador muestra primero el dato verificado de `content/github-stars.json`, incluido un cero real. Su tooltip indica la fecha de comprobación. Después consulta `GET https://api.github.com/repos/{owner}/{repo}` sin token, cookies ni cabecera de autorización; los metadatos públicos válidos sustituyen ese dato.
+Los enlaces apuntan al repositorio definido en `content/project.json`. El contador muestra primero el dato verificado de `content/github-stars.json`, incluido un cero real, y después revalida los datos públicos de `github-stats` descritos más abajo. Su tooltip indica cuándo se comprobó el valor mostrado. Una respuesta solo sustituye el valor visible si su fecha de origen es igual o más reciente.
 
 Si el repositorio sigue privado, no existe, falla la red o se alcanza el límite de la API, se conserva el último valor verificado con su fecha original. Se rechazan capturas de metadatos inválidas o de otro repositorio. Si ninguna fuente está disponible, se mantiene el enlace sin inventar un contador. Actualiza el dato desde la raíz con `make github-stars`, usando tu sesión de GitHub CLI, y reconstruye la web con `make site`. Solo se guardan la URL del repositorio, el número y la fecha; no se publican credenciales.
 
-El navegador conserva los metadatos de la API pública en `sessionStorage` durante 15 minutos (5 minutos tras un fallo). La petición tiene un límite de 4 segundos. El sitio y sus diagramas funcionan aunque GitHub no responda. Generar la web no modifica la visibilidad del repositorio ni sube código.
+La API pública de GitHub sirve de alternativa si el dato programado falta, es inválido o supera las 48 horas. Sus metadatos se conservan en `sessionStorage` durante 15 minutos (5 minutos tras un fallo), para limitar las consultas anónimas a la API. Las peticiones de metadatos públicos omiten credenciales y tienen un límite de 4 segundos. El sitio y sus diagramas funcionan aunque GitHub no responda. Generar la web no modifica la visibilidad del repositorio ni sube código.
 
 ## Biblioteca de iconos local
 
@@ -91,7 +91,9 @@ La URL de publicación predeterminada está en el perfil público. Para otro hos
 
 La web lee `stars.json` de la rama pública `github-stats`, que solo contiene ese dato. `.github/workflows/stars.yml` lo actualiza a diario a las 06:17 UTC y permite una ejecución manual. El job ejecuta el publicador de metadatos y sus tests: no compila aplicaciones ni Terraform, no despliega Pages y no necesita PAT ni credenciales Azure. Su `GITHUB_TOKEN` temporal puede escribir contenido; el script solo actualiza la rama de datos, sin forzar el historial. `main` conserva sus controles de PR.
 
-El navegador guarda una caché de 15 minutos. Si el dato diario no está disponible o supera las 48 horas, puede consultar la API pública de GitHub y conservar la copia fechada incluida en la web. Cero es un valor válido; un fallo nunca se convierte en un cero inventado. El tooltip indica cuándo se comprobó el valor mostrado. GitHub puede retrasar o desactivar las ejecuciones programadas; puedes reintentarlo en **Actions → Refresh public GitHub stars → Run workflow**. Los forks deben cambiar la URL del repositorio de la web y activar su propio workflow. El navegador no recibe ningún token.
+La página visible revalida el JSON de la rama al abrirse, recuperar el foco o la visibilidad, volver desde el historial y cada minuto mientras siga visible. Estas consultas omiten la caché de sesión y usan `cache: no-store` junto con una clave en la URL que cambia cada minuto, para evitar copias antiguas del navegador o la CDN. Las actualizaciones simultáneas comparten una petición. Si falla la red, se conserva el último valor fechado; un cero verificado más reciente puede sustituir a un contador anterior mayor que cero.
+
+El contador refleja la última ejecución correcta del workflow de datos, no un flujo en directo de eventos de estrellas de GitHub. GitHub puede retrasar o desactivar las ejecuciones programadas; usa **Actions → Refresh public GitHub stars → Run workflow** para actualizarlo antes. Tras una actualización del código de la web, recarga una vez las pestañas que ya estaban abiertas para recibir el nuevo script. Los forks deben cambiar la URL del repositorio de la web y activar su propio workflow. El navegador no recibe ningún token.
 
 ### Por qué conservar la rama github-stats
 

@@ -66,11 +66,11 @@ Visual reference: `goliat-cloud-inventory` at commit `c456aa3d33169261e257506ff9
 
 ## GitHub link and stars
 
-Links target the repository configured in `content/project.json`. The counter first displays a verified snapshot from `content/github-stars.json`, including a real zero. Its tooltip shows the date it was checked. The browser then requests `GET https://api.github.com/repos/{owner}/{repo}` without tokens, cookies or authorization headers; valid public metadata replaces the snapshot.
+Links target the repository configured in `content/project.json`. The counter first displays a verified snapshot from `content/github-stars.json`, including a real zero, then revalidates the public `github-stats` data described below. Its tooltip shows when the displayed value was checked. A response replaces the displayed value only when its source timestamp is at least as recent.
 
 If the repository is private, missing or rate limited, or the network fails, the last verified snapshot remains visible with its original date. An invalid snapshot or one for a different repository is rejected. If neither source is available, the link remains without an invented count. Refresh the snapshot from the repository root with `make github-stars`, using your GitHub CLI session, then rebuild with `make site`. Only the repository URL, count and timestamp are stored; no credentials are shipped.
 
-The browser caches public API metadata in `sessionStorage` for 15 minutes, or 5 minutes after failure. Requests time out after 4 seconds. The site and diagrams remain functional without GitHub. Building the website neither changes repository visibility nor uploads code.
+The public GitHub API is a fallback when scheduled data is missing, invalid or older than 48 hours. Its metadata is cached in `sessionStorage` for 15 minutes, or 5 minutes after failure, to limit anonymous API requests. Public metadata requests omit credentials and time out after 4 seconds. The site and diagrams remain functional without GitHub. Building the website neither changes repository visibility nor uploads code.
 
 ## Local icon library
 
@@ -91,7 +91,9 @@ The default deployment URL is set in the public profile. Override it for another
 
 The website reads public `stars.json` from the data-only `github-stats` branch. `.github/workflows/stars.yml` refreshes it daily at 06:17 UTC and supports a manual run. This job runs only the metadata publisher and its tests: no application or Terraform build, Pages deployment, PAT or Azure credential is needed. Its short-lived `GITHUB_TOKEN` can write repository contents; the script only updates the dedicated branch and never force-pushes. `main` retains its PR checks.
 
-The browser uses a 15-minute cache. It can fall back to the public GitHub API and the dated snapshot included with the website if the scheduled data is unavailable or older than 48 hours. Zero is a valid count; a failed request never becomes an invented zero. The tooltip shows when the displayed value was checked. GitHub can delay or disable scheduled workflows; use **Actions → Refresh public GitHub stars → Run workflow** to retry. Forks must update the website's repository URL and enable their own scheduled workflow. No token is shipped to the browser.
+The visible page revalidates the branch JSON when it opens, regains focus or visibility, returns from browser history, and every minute while visible. These requests bypass the session cache and use `cache: no-store` plus a URL key that changes each minute to avoid stale browser or CDN copies. Concurrent refreshes share one request. The last dated value remains available if the network fails; a newer verified zero can replace a previous nonzero count.
+
+The counter reflects the last successful data workflow, rather than a live stream of GitHub star events. GitHub can delay or disable scheduled workflows; use **Actions → Refresh public GitHub stars → Run workflow** to update it sooner. After a website code update, reload an already-open page once to load the new script. Forks must update the website's repository URL and enable their own scheduled workflow. No token is shipped to the browser.
 
 ### Why keep the github-stats branch?
 

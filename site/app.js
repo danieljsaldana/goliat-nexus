@@ -303,18 +303,31 @@ topologyObserver.observe($('topology'));
 
 let publicMetadataStorage=null;
 try{publicMetadataStorage=sessionStorage;}catch{}
+let publicStarFallback=null,starRefreshInFlight=null;
+function applyGitHubStars(snapshot){
+ if(!snapshot||(githubStarsCheckedAt&&Date.parse(snapshot.checkedAt)<Date.parse(githubStarsCheckedAt)))return;
+ githubStars=snapshot.count;githubStarsCheckedAt=snapshot.checkedAt;renderGitHubStars();
+}
 async function loadGitHubStars(){
  const repository=document.querySelector('[data-repository]').href;
- let fallback=null;
- try{
+ if(!publicStarFallback)try{
   const response=await fetch(new URL('./content/github-stars.json',import.meta.url),{cache:'no-store'});
   if(response.ok){
-   fallback=await response.json();
+   const fallback=await response.json();
    const snapshot=readStarSnapshot(repository,fallback);
-   if(snapshot){githubStars=snapshot.count;githubStarsCheckedAt=snapshot.checkedAt;renderGitHubStars();}
+   if(snapshot){publicStarFallback=fallback;applyGitHubStars(snapshot);}
   }
  }catch{ /* A missing snapshot must not prevent a public GitHub API request. */ }
- const latest=await getStarSnapshot(repository,{storage:publicMetadataStorage,fallback});
- if(latest){githubStars=latest.count;githubStarsCheckedAt=latest.checkedAt;renderGitHubStars();}
+ const latest=await getStarSnapshot(repository,{storage:publicMetadataStorage,fallback:publicStarFallback,refresh:true});
+ applyGitHubStars(latest);
 }
-loadGitHubStars();
+function refreshVisibleStars(){
+ if(document.visibilityState==='hidden')return;
+ if(!starRefreshInFlight)starRefreshInFlight=loadGitHubStars().catch(()=>{}).finally(()=>{starRefreshInFlight=null;});
+ return starRefreshInFlight;
+}
+window.addEventListener('focus',refreshVisibleStars);
+window.addEventListener('pageshow',refreshVisibleStars);
+document.addEventListener('visibilitychange',refreshVisibleStars);
+setInterval(refreshVisibleStars,60000);
+refreshVisibleStars();
