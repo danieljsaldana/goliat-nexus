@@ -14,8 +14,8 @@
     "@azure/keyvault-secrets": "4.12.0",
     "@azure/storage-queue": "12.32.0",
     "@azure/eventgrid": "5.12.0",
-    "mongodb": "7.8.0",
-    "jose": "6.2.14"
+    "mongodb": "7.9.0",
+    "jose": "6.2.17"
   },
   "license": "PolyForm-Noncommercial-1.0.0"
 }
